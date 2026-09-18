@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bastotan — Luas Ilmu, Kuat Raga</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EFEEE6; --surface:#FFFFFF; --surface-2:#F7F5EE;
+    --ink:#23281F; --ink-soft:#666C5D; --border:#DEDACB;
+    --ilmi:#2E5257; --ilmi-soft:#DCE7E6;
+    --jism:#B4592F; --jism-soft:#F3E1D2;
+    --gold:#8C6A2E; --gold-soft:#EDE3C9;
+    --shadow: 0 12px 28px -16px rgba(35,40,31,0.35);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#171B17; --surface:#1E231C; --surface-2:#242A20;
+      --ink:#EDEAE0; --ink-soft:#A6AC9B; --border:#333A2C;
+      --ilmi:#83BCB9; --ilmi-soft:#20302E;
+      --jism:#E38C55; --jism-soft:#33271C;
+      --gold:#D8BA6E; --gold-soft:#332C1C;
+      --shadow: 0 14px 30px -16px rgba(0,0,0,0.55);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#171B17; --surface:#1E231C; --surface-2:#242A20;
+    --ink:#EDEAE0; --ink-soft:#A6AC9B; --border:#333A2C;
+    --ilmi:#83BCB9; --ilmi-soft:#20302E;
+    --jism:#E38C55; --jism-soft:#33271C;
+    --gold:#D8BA6E; --gold-soft:#332C1C;
+    --shadow: 0 14px 30px -16px rgba(0,0,0,0.55);
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing:antialiased; min-height:100vh;
+  }
+  .display{ font-family:'Fraunces', ui-serif, Georgia, serif; }
+  .app{ max-width:440px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; position:relative; background:var(--bg); }
+
+  .topbar{ padding:22px 20px 6px; display:flex; align-items:center; justify-content:space-between; }
+  .brand{ display:flex; align-items:baseline; gap:8px; }
+  .brand .mark{ font-size:22px; }
+  .brand-name{ font-family:'Fraunces', serif; font-weight:600; font-size:21px; letter-spacing:0.2px; }
+  .brand-verse{ font-size:12.5px; color:var(--ink-soft); direction:rtl; font-family:'Fraunces', serif; background:none; border:none; cursor:pointer; padding:0; }
+
+  main{ flex:1; padding:4px 20px 100px; overflow-x:hidden; }
+  .screen{ display:none; animation:fadeIn .35s ease; }
+  .screen.active{ display:block; }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
+  @media (prefers-reduced-motion: reduce){ .screen{ animation:none; } }
+
+  h1.page-title{ font-family:'Fraunces', serif; font-weight:600; font-size:24px; margin:14px 0 4px; }
+  .page-sub{ color:var(--ink-soft); font-size:14px; margin:0 0 18px; }
+
+  .hero{ background:var(--surface); border:1px solid var(--border); border-radius:26px; padding:26px 22px 22px; box-shadow:var(--shadow); margin-top:10px; }
+  .hero-greet{ font-size:14px; color:var(--ink-soft); margin:0 0 2px; }
+  .hero-name{ font-family:'Fraunces', serif; font-size:21px; font-weight:600; margin:0 0 18px; }
+
+  .ring-wrap{ position:relative; width:196px; height:196px; margin:0 auto 6px; }
+  .ring-wrap svg{ width:100%; height:100%; transform:rotate(-90deg); }
+  .ring-track{ fill:none; stroke-width:14; }
+  .ring-fill{ fill:none; stroke-width:14; stroke-linecap:round; transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1); }
+  @media (prefers-reduced-motion: reduce){ .ring-fill{ transition:none; } }
+  .ring-center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+  .ring-streak{ font-family:'Fraunces', serif; font-size:34px; font-weight:600; line-height:1; }
+  .ring-streak-label{ font-size:12px; color:var(--ink-soft); margin-top:4px; }
+
+  .legend-row{ display:flex; justify-content:center; gap:16px; margin-top:16px; flex-wrap:wrap; }
+  .legend-item{ display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--ink-soft); }
+  .dot{ width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+
+  .badge-link{ text-align:center; font-size:12.5px; font-weight:600; color:var(--gold); margin-top:14px; cursor:pointer; }
+
+  .cta-row{ display:flex; gap:10px; margin-top:16px; }
+  .btn{ border:none; cursor:pointer; font-family:inherit; font-weight:600; font-size:14px; border-radius:999px; padding:13px 16px; flex:1; display:flex; align-items:center; justify-content:center; gap:7px; transition:transform .12s ease, opacity .12s ease; }
+  .btn:active{ transform:scale(0.97); }
+  .btn-ilmi{ background:var(--ilmi); color:#fff; }
+  .btn-jism{ background:var(--jism); color:#fff; }
+  .btn-ghost{ background:var(--surface-2); color:var(--ink); border:1px solid var(--border); }
+  .btn-outline{ background:transparent; color:var(--ink); border:1.5px solid var(--border); }
+  .btn-full{ width:100%; margin-top:14px; }
+
+  .card{ background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:18px; margin-top:14px; }
+  .card-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+  .card-title{ font-weight:600; font-size:15px; }
+  .card-tag{ font-size:12px; color:var(--ink-soft); }
+
+  .stat-row{ display:flex; align-items:center; justify-content:space-between; gap:14px; }
+  .stat-big{ font-family:'Fraunces', serif; font-size:30px; font-weight:600; line-height:1; }
+  .stat-target{ font-size:13px; color:var(--ink-soft); margin-top:6px; }
+  .stat-streak{ font-size:12.5px; color:var(--ink-soft); margin-top:14px; }
+  .stat-streak b{ color:var(--ink); font-weight:700; }
+  .check-circle{ width:64px; height:64px; border-radius:50%; background:var(--jism-soft); display:flex; align-items:center; justify-content:center; font-size:26px; flex-shrink:0; color:var(--jism); }
+  .check-circle.empty{ background:var(--surface-2); color:var(--border); }
+  .check-circle.ilmi-tone{ background:var(--ilmi-soft); color:var(--ilmi); }
+
+  .circle-scroll{ display:flex; gap:14px; overflow-x:auto; padding:2px 2px 6px; scrollbar-width:none; }
+  .circle-scroll::-webkit-scrollbar{ display:none; }
+  .circle-mini{ display:flex; flex-direction:column; align-items:center; gap:6px; flex-shrink:0; width:58px; }
+  .mini-avatar{ width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:600; color:#fff; font-size:15px; position:relative; border:2.5px solid var(--surface); }
+  .mini-avatar.done{ box-shadow:0 0 0 2.5px var(--jism); }
+  .mini-avatar.pending{ box-shadow:0 0 0 2.5px var(--border); opacity:0.85; }
+  .mini-name{ font-size:11px; color:var(--ink-soft); text-align:center; line-height:1.2; }
+
+  .chip-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top:4px; }
+  .chip{ border:1.5px solid var(--border); background:var(--surface-2); color:var(--ink-soft); padding:9px 14px; border-radius:999px; font-size:13px; cursor:pointer; font-weight:500; }
+  .chip.active{ border-color:var(--jism); background:var(--jism-soft); color:var(--jism); font-weight:600; }
+  .chip.active-ilmi{ border-color:var(--ilmi); background:var(--ilmi-soft); color:var(--ilmi); font-weight:600; }
+
+  .chart{ display:flex; align-items:flex-end; gap:8px; height:92px; margin-top:6px; }
+  .chart-col{ flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; height:100%; justify-content:flex-end; }
+  .chart-bar{ width:100%; max-width:26px; border-radius:6px 6px 3px 3px; min-height:4px; transition:height .5s ease; }
+  .chart-day{ font-size:11px; color:var(--ink-soft); }
+
+  .hist-row{ display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-top:1px solid var(--border); font-size:13.5px; }
+  .hist-row:first-child{ border-top:none; }
+  .hist-day{ color:var(--ink-soft); }
+  .hist-val{ font-weight:600; }
+
+  .friend-row{ display:flex; align-items:center; gap:12px; padding:13px 0; border-top:1px solid var(--border); }
+  .friend-row:first-child{ border-top:none; }
+  .f-avatar{ width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:600; flex-shrink:0; }
+  .f-info{ flex:1; min-width:0; }
+  .f-name{ font-weight:600; font-size:14.5px; }
+  .f-status{ font-size:12.5px; color:var(--ink-soft); margin-top:2px; display:flex; gap:8px; }
+  .status-dot{ width:7px; height:7px; border-radius:50%; display:inline-block; margin-right:4px; vertical-align:middle; }
+  .btn-nudge{ border:1.5px solid var(--jism); color:var(--jism); background:transparent; border-radius:999px; padding:8px 13px; font-size:12.5px; font-weight:600; cursor:pointer; flex-shrink:0; font-family:inherit; }
+  .btn-nudge.sent{ border-color:var(--border); color:var(--ink-soft); background:var(--surface-2); }
+  .badge-done{ font-size:12px; font-weight:600; color:var(--jism); background:var(--jism-soft); padding:7px 11px; border-radius:999px; flex-shrink:0; }
+
+  .story-card{ display:flex; gap:12px; padding:14px 0; border-top:1px solid var(--border); cursor:pointer; align-items:flex-start; }
+  .story-card:first-child{ border-top:none; }
+  .story-icon{ width:42px; height:42px; border-radius:12px; background:var(--surface-2); display:flex; align-items:center; justify-content:center; font-size:19px; flex-shrink:0; }
+  .story-body{ flex:1; min-width:0; }
+  .story-title{ font-weight:600; font-size:14.5px; margin-bottom:2px; }
+  .story-tag{ font-size:11.5px; color:var(--ink-soft); margin-bottom:4px; }
+  .story-teaser{ font-size:13px; color:var(--ink-soft); line-height:1.4; }
+  .story-side{ flex-shrink:0; align-self:center; font-size:12px; font-weight:600; }
+  .story-side.done{ color:var(--jism); }
+  .story-side.todo{ color:var(--ilmi); }
+
+  .toast{ position:fixed; left:50%; bottom:96px; transform:translate(-50%, 20px); background:var(--ink); color:var(--bg); padding:12px 18px; border-radius:14px; font-size:13.5px; opacity:0; pointer-events:none; transition:opacity .25s ease, transform .25s ease; z-index:120; max-width:380px; text-align:center; box-shadow:0 10px 24px -8px rgba(0,0,0,0.4); }
+  .toast.show{ opacity:1; transform:translate(-50%, 0); }
+
+  nav.tabbar{ position:sticky; bottom:0; left:0; right:0; background:var(--surface); border-top:1px solid var(--border); display:flex; padding:7px 2px calc(7px + env(safe-area-inset-bottom)); max-width:440px; margin:0 auto; }
+  .tab-btn{ flex:1; background:none; border:none; cursor:pointer; font-family:inherit; display:flex; flex-direction:column; align-items:center; gap:3px; padding:5px 1px; color:var(--ink-soft); font-size:10px; font-weight:500; }
+  .tab-btn .tab-icon{ font-size:19px; }
+  .tab-btn.active{ color:var(--ink); }
+
+  .section-label{ font-size:12.5px; font-weight:600; color:var(--ink-soft); margin:20px 0 2px; }
+
+  .overlay{ position:fixed; inset:0; background:var(--bg); z-index:100; display:none; flex-direction:column; max-width:440px; margin:0 auto; }
+  .overlay.active{ display:flex; }
+  .overlay-header{ display:flex; align-items:center; justify-content:space-between; padding:18px 20px 8px; }
+  .overlay-back{ background:var(--surface-2); border:1px solid var(--border); width:38px; height:38px; border-radius:50%; font-size:18px; cursor:pointer; color:var(--ink); display:flex; align-items:center; justify-content:center; }
+  .overlay-timer{ font-family:'Fraunces', serif; font-weight:600; font-size:14.5px; background:var(--ilmi-soft); color:var(--ilmi); padding:7px 15px; border-radius:999px; }
+  .overlay-timer.jism-tone{ background:var(--jism-soft); color:var(--jism); }
+  .overlay-body{ flex:1; overflow-y:auto; padding:8px 20px 20px; }
+  .overlay-title{ font-family:'Fraunces', serif; font-size:22px; font-weight:600; margin:6px 0 4px; }
+  .overlay-tag{ font-size:12.5px; color:var(--ink-soft); margin-bottom:16px; }
+  .ayat-card{ background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:12px; }
+  .ayat-num{ display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:50%; background:var(--ilmi-soft); color:var(--ilmi); font-size:12px; font-weight:700; margin-bottom:10px; }
+  .ayat-arabic{ font-family:'Fraunces', serif; font-size:22px; line-height:1.9; direction:rtl; text-align:right; margin-bottom:8px; }
+  .ayat-translate{ font-size:13.5px; color:var(--ink-soft); line-height:1.5; }
+  .overlay-footer{ padding:12px 20px calc(14px + env(safe-area-inset-bottom)); border-top:1px solid var(--border); }
+  .story-p{ font-size:14.5px; line-height:1.75; margin:0 0 14px; color:var(--ink); }
+  .story-quote{ background:var(--ilmi-soft); border-left:4px solid var(--ilmi); border-radius:10px; padding:14px 16px; margin:4px 0 18px; }
+  .story-quote .ar{ font-family:'Fraunces', serif; font-size:19px; direction:rtl; text-align:right; color:var(--ilmi); margin-bottom:6px; }
+  .story-quote .tr{ font-size:13px; color:var(--ink-soft); }
+  .lesson-box{ background:var(--jism-soft); border-radius:12px; padding:14px 16px; font-size:13.5px; color:var(--ink); margin-top:6px; }
+  .lesson-label{ font-weight:700; color:var(--jism); font-size:12px; margin-bottom:4px; display:block; }
+
+  .gerak-session{ display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 10px; text-align:center; }
+  .gerak-session-icon{ font-size:64px; margin-bottom:18px; }
+  .gerak-session-type{ font-family:'Fraunces', serif; font-size:20px; font-weight:600; margin-bottom:8px; }
+  .gerak-session-hint{ font-size:13.5px; color:var(--ink-soft); max-width:260px; }
+
+  .badge-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px 10px; margin-top:8px; }
+  .badge-tile{ display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; }
+  .badge-icon{ width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:26px; background:var(--surface-2); border:1px solid var(--border); }
+  .badge-label{ font-size:11px; color:var(--ink-soft); line-height:1.25; max-width:82px; }
+  .badge-label.unlocked-label{ color:var(--ink); font-weight:600; }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <div class="topbar">
+    <div class="brand">
+      <span class="mark">🌙</span>
+      <div class="brand-name">Bastotan</div>
+    </div>
+    <button class="brand-verse" onclick="openAchievements()" title="Lihat lencana">بَسْطَةً فِي الْعِلْمِ وَالْجِسْمِ</button>
+  </div>
+
+  <main>
+
+    <!-- ================= HOME ================= -->
+    <section class="screen active" id="screen-home">
+      <div class="hero">
+        <p class="hero-greet">Assalamu'alaikum,</p>
+        <p class="hero-name" id="user-name">Fajar</p>
+
+        <div class="ring-wrap">
+          <svg viewBox="0 0 196 196">
+            <circle class="ring-track" cx="98" cy="98" r="80" style="stroke:var(--ilmi-soft)"/>
+            <circle class="ring-fill" id="ring-ilmi" cx="98" cy="98" r="80" style="stroke:var(--ilmi)"/>
+            <circle class="ring-track" cx="98" cy="98" r="58" style="stroke:var(--jism-soft)"/>
+            <circle class="ring-fill" id="ring-jism" cx="98" cy="98" r="58" style="stroke:var(--jism)"/>
+          </svg>
+          <div class="ring-center">
+            <div class="ring-streak" id="streak-num">12</div>
+            <div class="ring-streak-label">hari beruntun</div>
+          </div>
+        </div>
+
+        <div class="legend-row">
+          <div class="legend-item"><span class="dot" style="background:var(--gold)"></span> Qur'an — <span id="legend-quran">0/1 mnt</span></div>
+          <div class="legend-item"><span class="dot" style="background:var(--ilmi)"></span> Ilmi — <span id="legend-ilmi">0/1 mnt</span></div>
+          <div class="legend-item"><span class="dot" style="background:var(--jism)"></span> Jism — <span id="legend-jism">0/30 mnt</span></div>
+        </div>
+
+        <div class="badge-link" onclick="openAchievements()">🏅 Lihat Lencana</div>
+
+        <div class="cta-row">
+          <button class="btn btn-ilmi" onclick="goTo('quran')">📖 Baca Qur'an</button>
+          <button class="btn btn-jism" onclick="goTo('gerak')">🏃 Mulai Gerak</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">Circle-mu hari ini</span>
+          <span class="card-tag" onclick="goTo('circle')" style="cursor:pointer; text-decoration:underline;">Lihat semua</span>
+        </div>
+        <div class="circle-scroll" id="home-circle-scroll"></div>
+      </div>
+
+      <p class="section-label">Fastabiqul khairat — berlomba dalam kebaikan, bukan gengsi.</p>
+    </section>
+
+    <!-- ================= QURAN ================= -->
+    <section class="screen" id="screen-quran">
+      <h1 class="page-title">Bacaan Qur'an</h1>
+      <p class="page-sub">Waktu membaca dihitung otomatis saat Qur'an dibuka, minimal 1 menit sehari. Progres ini terpisah dari cincin Ilmi.</p>
+
+      <div class="card">
+        <div class="stat-row">
+          <div>
+            <div class="stat-big" id="quran-big">0 <span style="font-size:16px; font-weight:500; color:var(--ink-soft);">menit</span></div>
+            <div class="stat-target" id="quran-target-label">Target harian: 1 menit</div>
+            <div class="stat-streak">Streak baca <b id="quran-streak">12 hari</b></div>
+          </div>
+          <div class="check-circle empty" id="quran-check">📖</div>
+        </div>
+        <button class="btn btn-ilmi btn-full" onclick="openQuranReader()">📖 Baca Al-Fatihah</button>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">Minggu ini</span>
+          <span class="card-tag">menit / hari</span>
+        </div>
+        <div class="chart" id="quran-chart"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="margin-bottom:4px;">Riwayat</div>
+        <div id="quran-history"></div>
+      </div>
+    </section>
+
+    <!-- ================= GERAK ================= -->
+    <section class="screen" id="screen-gerak">
+      <h1 class="page-title">Gerak Hari Ini</h1>
+      <p class="page-sub">Pilih jenis aktivitas, lalu mulai sesi. Waktu tercatat otomatis selama sesi berjalan.</p>
+
+      <div class="card">
+        <div class="stat-row">
+          <div>
+            <div class="stat-big" id="gerak-big">0 <span style="font-size:16px; font-weight:500; color:var(--ink-soft);">menit</span></div>
+            <div class="stat-target" id="gerak-target-label">Target harian: 30 menit</div>
+            <div class="stat-streak">Streak gerak <b id="gerak-streak">12 hari</b></div>
+          </div>
+          <div class="check-circle empty" id="gerak-check">🏃</div>
+        </div>
+
+        <div class="chip-row" style="margin-top:16px;" id="activity-chips">
+          <button class="chip active" data-act="Jalan kaki">Jalan kaki</button>
+          <button class="chip" data-act="Lari">Lari</button>
+          <button class="chip" data-act="Olahraga rumah">Olahraga rumah</button>
+          <button class="chip" data-act="Bersepeda">Bersepeda</button>
+        </div>
+
+        <button class="btn btn-jism btn-full" onclick="openGerakSession()">🏃 Mulai Sesi</button>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">Minggu ini</span>
+          <span class="card-tag">menit / hari</span>
+        </div>
+        <div class="chart" id="gerak-chart"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="margin-bottom:4px;">Riwayat</div>
+        <div id="gerak-history"></div>
+      </div>
+    </section>
+
+    <!-- ================= BELAJAR ================= -->
+    <section class="screen" id="screen-belajar">
+      <h1 class="page-title">Belajar</h1>
+      <p class="page-sub">Kisah singkat untuk menguatkan ilmu dan iman. Waktu membacanya mengisi cincin Ilmi.</p>
+
+      <div class="chip-row" id="theme-chips">
+        <button class="chip" data-theme="akidah">Akidah</button>
+        <button class="chip" data-theme="fiqih">Fiqih</button>
+        <button class="chip" data-theme="sirah">Sirah</button>
+      </div>
+
+      <div class="card">
+        <div id="story-list"></div>
+      </div>
+    </section>
+
+    <!-- ================= CIRCLE ================= -->
+    <section class="screen" id="screen-circle">
+      <h1 class="page-title">Circle</h1>
+      <p class="page-sub">Saling mengingatkan dalam kebaikan.</p>
+
+      <button class="btn btn-outline" style="width:100%; margin-bottom:6px;" onclick="inviteFriend()">➕ Undang teman ke Circle</button>
+
+      <div class="card" style="margin-top:14px;">
+        <div id="friend-list"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="tabbar">
+    <button class="tab-btn active" data-tab="home" onclick="goTo('home')"><span class="tab-icon">🏠</span>Beranda</button>
+    <button class="tab-btn" data-tab="quran" onclick="goTo('quran')"><span class="tab-icon">📖</span>Qur'an</button>
+    <button class="tab-btn" data-tab="gerak" onclick="goTo('gerak')"><span class="tab-icon">🏃</span>Gerak</button>
+    <button class="tab-btn" data-tab="belajar" onclick="goTo('belajar')"><span class="tab-icon">📚</span>Belajar</button>
+    <button class="tab-btn" data-tab="circle" onclick="goTo('circle')"><span class="tab-icon">👥</span>Circle</button>
+  </nav>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- ============ QURAN READER OVERLAY ============ -->
+  <div class="overlay" id="overlay-quran">
+    <div class="overlay-header">
+      <button class="overlay-back" onclick="closeQuranReader()">←</button>
+      <span class="overlay-timer">🕊️ Sedang berlangsung</span>
+    </div>
+    <div class="overlay-body">
+      <div class="overlay-title">Al-Fatihah</div>
+      <div class="overlay-tag">Pembukaan · 7 ayat</div>
+      <div id="ayat-list"></div>
+    </div>
+    <div class="overlay-footer">
+      <button class="btn btn-ilmi btn-full" style="margin-top:0;" onclick="closeQuranReader()">Selesai Membaca</button>
+    </div>
+  </div>
+
+  <!-- ============ GERAK SESSION OVERLAY ============ -->
+  <div class="overlay" id="overlay-gerak">
+    <div class="overlay-header">
+      <button class="overlay-back" onclick="closeGerakSession()">←</button>
+      <span class="overlay-timer jism-tone">🕊️ Sedang berlangsung</span>
+    </div>
+    <div class="overlay-body">
+      <div class="gerak-session">
+        <div class="gerak-session-icon" id="gerak-session-icon">🚶</div>
+        <div class="gerak-session-type" id="gerak-session-type">Jalan kaki</div>
+        <div class="gerak-session-hint">Sesi sedang berjalan. Waktumu tercatat otomatis, tutup halaman ini saat selesai.</div>
+      </div>
+    </div>
+    <div class="overlay-footer">
+      <button class="btn btn-jism btn-full" style="margin-top:0;" onclick="closeGerakSession()">Selesai Gerak</button>
+    </div>
+  </div>
+
+  <!-- ============ STORY READER OVERLAY ============ -->
+  <div class="overlay" id="overlay-story">
+    <div class="overlay-header">
+      <button class="overlay-back" onclick="closeStoryReader()">←</button>
+      <span class="overlay-timer">🕊️ Sedang berlangsung</span>
+    </div>
+    <div class="overlay-body" id="story-body"></div>
+    <div class="overlay-footer">
+      <button class="btn btn-ilmi btn-full" style="margin-top:0;" onclick="finishStory()">Tandai Selesai Membaca</button>
+    </div>
+  </div>
+
+  <!-- ============ ACHIEVEMENTS OVERLAY ============ -->
+  <div class="overlay" id="overlay-achieve">
+    <div class="overlay-header">
+      <button class="overlay-back" onclick="closeAchievements()">←</button>
+      <span></span>
+    </div>
+    <div class="overlay-body">
+      <div class="overlay-title">Lencana</div>
+      <div class="overlay-tag">Jejak istiqomahmu dalam ilmu dan raga.</div>
+      <div class="badge-grid" id="badge-grid"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ---------------- state ----------------
+  const state = {
+    streakDays: 12,
+    quranTargetMin: 1,
+    ilmiTargetMin: 1,
+    gerakTargetMin: 30,
+    quranSecondsToday: 0,
+    ilmiSecondsToday: 0,
+    gerakSecondsToday: 0,
+    quranWeek: [8,15,3,20,5,12,0],
+    gerakWeek: [20,30,0,25,15,30,0],
+    quranHistory: [
+      {day:'Kemarin', val:'12 menit'},
+      {day:'2 hari lalu', val:'5 menit'},
+      {day:'3 hari lalu', val:'20 menit'},
+    ],
+    gerakHistory: [
+      {day:'Kemarin', val:'15 menit · Jalan kaki'},
+      {day:'2 hari lalu', val:'30 menit · Lari'},
+      {day:'3 hari lalu', val:'0 menit'},
+    ],
+    friends: [
+      {name:'Nadia', color:'#2E5257', quran:true, gerak:true, nudged:false},
+      {name:'Ridho', color:'#B4592F', quran:true, gerak:false, nudged:false},
+      {name:'Salma', color:'#8C6A2E', quran:false, gerak:false, nudged:false},
+      {name:'Umar', color:'#5B7B6E', quran:false, gerak:true, nudged:false},
+      {name:'Zaid', color:'#9C5B45', quran:true, gerak:true, nudged:false},
+    ],
+    activeChip: 'Jalan kaki',
+    learnTheme: 'sirah',
+    storiesRead: new Set(),
+    openStoryId: null,
+    invited: false,
+  };
+
+  const days = ['Sen','Sel','Rab','Kam','Jum','Sab','Min'];
+  const RING_R_ILMI = 80, RING_R_JISM = 58;
+  const CIRC_ILMI = 2*Math.PI*RING_R_ILMI, CIRC_JISM = 2*Math.PI*RING_R_JISM;
+  const activityIcons = {'Jalan kaki':'🚶','Lari':'🏃','Olahraga rumah':'🏋️','Bersepeda':'🚴'};
+
+  function initials(name){ return name.trim().charAt(0).toUpperCase(); }
+  function formatTime(sec){ const m=Math.floor(sec/60), s=sec%60; return `${m}:${s.toString().padStart(2,'0')}`; }
+  function quranMinutesToday(){ return Math.floor(state.quranSecondsToday/60); }
+  function ilmiMinutesToday(){ return Math.floor(state.ilmiSecondsToday/60); }
+  function gerakMinutesToday(){ return Math.floor(state.gerakSecondsToday/60); }
+
+  // ---------------- Al-Fatihah content ----------------
+  const fatihah = [
+    {ar:'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ', tr:'Dengan nama Allah Yang Maha Pengasih, Maha Penyayang.'},
+    {ar:'الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ', tr:'Segala puji bagi Allah, Tuhan seluruh alam.'},
+    {ar:'الرَّحْمَٰنِ الرَّحِيمِ', tr:'Yang Maha Pengasih, Maha Penyayang.'},
+    {ar:'مَالِكِ يَوْمِ الدِّينِ', tr:'Yang menguasai hari pembalasan.'},
+    {ar:'إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ', tr:'Hanya kepada-Mu kami menyembah, dan hanya kepada-Mu kami memohon pertolongan.'},
+    {ar:'اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ', tr:'Tunjukilah kami jalan yang lurus.'},
+    {ar:'صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ', tr:'Jalan orang-orang yang Engkau beri nikmat, bukan jalan mereka yang dimurkai dan bukan pula jalan mereka yang tersesat.'},
+  ];
+
+  // ---------------- stories content ----------------
+  const stories = [
+    {
+      id:'sirah-talut', theme:'sirah', icon:'🛡️',
+      title:'Thalut — Luas Ilmu, Kuat Raga', tag:'Sirah · 4 menit baca',
+      teaser:'Mengapa seorang raja dipilih bukan karena hartanya, melainkan ilmu dan kekuatannya.',
+      paragraphs:[
+        'Setelah lama tanpa pemimpin, Bani Israil meminta nabi mereka untuk mengangkat seorang raja yang dapat menyatukan mereka berperang di jalan Allah.',
+        'Nabi mereka lalu mengabarkan bahwa Allah telah mengangkat Thalut sebagai raja. Namun sebagian dari mereka menolak, sebab Thalut bukan berasal dari keluarga terpandang maupun orang berada.',
+        'Nabi mereka menjelaskan alasan sesungguhnya di balik pilihan itu, bukan garis keturunan atau harta, melainkan dua bekal yang jauh lebih penting.'
+      ],
+      quote:{ ar:'وَزَادَهُ بَسْطَةً فِي الْعِلْمِ وَالْجِسْمِ', tr:'"...dan Allah telah melebihkan keluasan ilmu dan kekuatan tubuhnya." (QS Al-Baqarah: 247)'},
+      paragraphs2:[
+        'Sebelum berperang, Thalut menguji pasukannya di tepi sebuah sungai: siapa yang minum sepuasnya akan gugur dari barisan, hanya yang menahan diri dan cukup seteguk yang boleh melanjutkan. Ribuan orang gagal pada ujian kecil ini, dan hanya sedikit yang lulus.',
+        'Pasukan kecil yang tersisa itu kemudian menghadapi Jalut (Goliath) dan bala tentaranya yang jauh lebih besar. Mereka yang yakin akan pertolongan Allah berkata, "Betapa banyak kelompok kecil yang mengalahkan kelompok besar dengan izin Allah."',
+        'Di barisan itu ada seorang pemuda bernama Dawud, yang dengan izin Allah berhasil mengalahkan Jalut. Kisah ini menjadi asal nama Bastotan, ilmu yang luas dan raga yang kuat bukan sekadar dua target harian, melainkan satu paket bekal yang sama pentingnya, dijaga dengan disiplin diri dan disandarkan pada pertolongan Allah.'
+      ]
+    },
+    {
+      id:'akidah-ibrahim', theme:'akidah', icon:'✨',
+      title:'Ibrahim Mencari Tuhan', tag:'Akidah · 3 menit baca',
+      teaser:'Kisah pencarian kebenaran yang berakhir pada penyerahan diri sepenuhnya kepada Allah.',
+      paragraphs:[
+        'Di tengah kaumnya yang menyembah bintang, bulan, dan matahari, Ibrahim muda mengamati langit malam dengan penuh tanya. Ia melihat sebuah bintang bersinar terang dan berkata, "Inikah Tuhanku?" Namun ketika bintang itu tenggelam, ia sadar sesuatu yang lenyap tidak pantas disembah.',
+        'Ia lalu melihat bulan terbit dan berkata hal yang sama, namun bulan pun turut tenggelam di ujung malam. Ketika matahari terbit dengan cahaya yang jauh lebih besar, ia sempat berharap itulah jawabannya, hingga matahari itu pun terbenam di penghujung hari.',
+        'Dari situ Ibrahim menyimpulkan bahwa segala sesuatu yang terbit dan tenggelam, yang berubah dan hilang, tidak layak menjadi sandaran hati. Ia lalu menghadapkan wajahnya kepada Allah, Pencipta langit dan bumi, dengan hati yang lurus dan penuh penyerahan diri.'
+      ]
+    },
+    {
+      id:'fiqih-safar', theme:'fiqih', icon:'🧭',
+      title:'Keringanan Shalat di Perjalanan', tag:'Fiqih · 3 menit baca',
+      teaser:'Bagaimana Islam memberi kemudahan tanpa mengurangi nilai ibadah.',
+      paragraphs:[
+        'Seorang sahabat hendak menempuh perjalanan jauh untuk suatu keperluan penting. Ia khawatir perjalanannya akan membuatnya kesulitan menunaikan shalat tepat waktu, sebagaimana biasa ia lakukan di rumah.',
+        'Ia pun bertanya kepada Rasulullah, dan dijelaskan bahwa musafir memiliki keringanan (rukhsah): boleh menjamak dua shalat dalam satu waktu, dan boleh mengqashar (meringkas) shalat yang empat rakaat menjadi dua rakaat, selama jarak dan kondisi perjalanan memenuhi syarat.',
+        'Sahabat itu pun melanjutkan perjalanannya dengan tenang, shalat tetap ia tunaikan, hanya bentuknya yang disesuaikan. Ia belajar bahwa Islam tidak pernah bermaksud memberatkan, melainkan memberi jalan agar ibadah tetap dapat dijaga dalam kondisi apa pun.'
+      ],
+      lesson:'Musafir yang menempuh jarak dan durasi tertentu diperbolehkan menjamak dan mengqashar shalat, sebagai bentuk keringanan dari Allah, bukan pengurangan nilai ibadahnya.'
+    },
+  ];
+
+  // ---------------- badges ----------------
+  function getBadgeDefs(){
+    const themesCovered = new Set(stories.filter(s => state.storiesRead.has(s.id)).map(s => s.theme));
+    return [
+      {icon:'⚡', label:'7 Hari Beruntun', unlocked: state.streakDays>=7},
+      {icon:'⚡', label:'30 Hari Beruntun', unlocked: state.streakDays>=30},
+      {icon:'⚡', label:'100 Hari Istiqomah', unlocked: state.streakDays>=100},
+      {icon:'📖', label:'Sepekan Istiqomah Qur\'an', unlocked: state.quranWeek.slice(0,6).every(v=>v>0)},
+      {icon:'💡', label:'Kisah Pertama', unlocked: state.storiesRead.size>=1},
+      {icon:'🌙', label:'Penuntut Ilmu', unlocked: themesCovered.size>=3},
+      {icon:'🏃', label:'Gerak Pertama', unlocked: state.gerakSecondsToday>0},
+      {icon:'🔥', label:'Sepekan Aktif Gerak', unlocked: state.gerakWeek.slice(0,6).every(v=>v>0)},
+      {icon:'➕', label:'Circle Starter', unlocked: state.invited},
+      {icon:'💬', label:'Penyemangat', unlocked: state.friends.some(f=>f.nudged)},
+      {icon:'🕌', label:'Bastotan Harian', unlocked: quranMinutesToday()>=state.quranTargetMin && ilmiMinutesToday()>=state.ilmiTargetMin && state.gerakSecondsToday>0},
+      {icon:'❤️', label:'Hati yang Istiqomah', unlocked: state.quranWeek.slice(0,6).every(v=>v>0) && state.gerakWeek.slice(0,6).every(v=>v>0)},
+    ];
+  }
+  function renderAchievements(){
+    const grid = document.getElementById('badge-grid');
+    grid.innerHTML = getBadgeDefs().map(b => `
+      <div class="badge-tile">
+        <div class="badge-icon" style="${b.unlocked ? '' : 'opacity:0.55;'}">${b.unlocked ? b.icon : '🔒'}</div>
+        <div class="badge-label ${b.unlocked ? 'unlocked-label' : ''}">${b.label}</div>
+      </div>
+    `).join('');
+  }
+  function openAchievements(){ renderAchievements(); document.getElementById('overlay-achieve').classList.add('active'); }
+  function closeAchievements(){ document.getElementById('overlay-achieve').classList.remove('active'); }
+
+  // ---------------- nav ----------------
+  function goTo(tab){
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-'+tab).classList.add('active');
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+    window.scrollTo({top:0, behavior:'instant'});
+  }
+
+  // ---------------- toast ----------------
+  let toastTimer;
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=> t.classList.remove('show'), 2400);
+  }
+
+  // ---------------- dashboard ----------------
+  function renderDashboard(){
+    const ilmiPct = Math.min(ilmiMinutesToday()/state.ilmiTargetMin, 1);
+    const jismPct = Math.min(gerakMinutesToday()/state.gerakTargetMin, 1);
+    const ringIlmi = document.getElementById('ring-ilmi');
+    const ringJism = document.getElementById('ring-jism');
+    ringIlmi.style.strokeDasharray = CIRC_ILMI;
+    ringIlmi.style.strokeDashoffset = CIRC_ILMI * (1 - ilmiPct);
+    ringJism.style.strokeDasharray = CIRC_JISM;
+    ringJism.style.strokeDashoffset = CIRC_JISM * (1 - jismPct);
+
+    document.getElementById('legend-quran').textContent = `${quranMinutesToday()}/${state.quranTargetMin} mnt${quranMinutesToday()>=state.quranTargetMin ? ' ✓' : ''}`;
+    document.getElementById('legend-ilmi').textContent = `${ilmiMinutesToday()}/${state.ilmiTargetMin} mnt${ilmiMinutesToday()>=state.ilmiTargetMin ? ' ✓' : ''}`;
+    document.getElementById('legend-jism').textContent = `${gerakMinutesToday()}/${state.gerakTargetMin} mnt`;
+
+    const wrap = document.getElementById('home-circle-scroll');
+    wrap.innerHTML = '';
+    state.friends.forEach(f => {
+      const done = f.quran && f.gerak;
+      const div = document.createElement('div');
+      div.className = 'circle-mini';
+      div.innerHTML = `
+        <div class="mini-avatar ${done ? 'done' : 'pending'}" style="background:${f.color}">${initials(f.name)}</div>
+        <div class="mini-name">${f.name}</div>
+      `;
+      wrap.appendChild(div);
+    });
+  }
+
+  // ---------------- quran screen + reader ----------------
+  function renderQuran(){
+    const minToday = quranMinutesToday();
+    const reached = minToday >= state.quranTargetMin;
+    document.getElementById('quran-big').innerHTML = `${minToday} <span style="font-size:16px; font-weight:500; color:var(--ink-soft);">menit</span>`;
+    document.getElementById('quran-target-label').textContent = `Target harian: ${state.quranTargetMin} menit`;
+    document.getElementById('quran-streak').textContent = `${state.streakDays} hari`;
+    const check = document.getElementById('quran-check');
+    check.textContent = reached ? '✓' : '📖';
+    check.classList.toggle('empty', !reached);
+
+    const chart = document.getElementById('quran-chart');
+    chart.innerHTML = '';
+    const week = state.quranWeek.slice(0,6).concat([minToday]);
+    const max = Math.max(...week, state.quranTargetMin, 5);
+    week.forEach((v,i) => {
+      const h = Math.max((v/max)*100, 3);
+      const isToday = i === 6;
+      chart.innerHTML += `<div class="chart-col"><div class="chart-bar" style="height:${h}%; background:${isToday ? 'var(--ilmi)' : 'var(--ilmi-soft)'}"></div><div class="chart-day" style="${isToday ? 'color:var(--ilmi); font-weight:700;' : ''}">${days[i]}</div></div>`;
+    });
+
+    document.getElementById('quran-history').innerHTML = state.quranHistory.map(h => `<div class="hist-row"><span class="hist-day">${h.day}</span><span class="hist-val">${h.val}</span></div>`).join('');
+  }
+
+  function renderAyat(){
+    document.getElementById('ayat-list').innerHTML = fatihah.map((a,i) => `
+      <div class="ayat-card">
+        <div class="ayat-num">${i+1}</div>
+        <div class="ayat-arabic">${a.ar}</div>
+        <div class="ayat-translate">${a.tr}</div>
+      </div>
+    `).join('');
+  }
+
+  let quranSessionStart = null;
+  function openQuranReader(){
+    renderAyat();
+    quranSessionStart = Date.now();
+    document.getElementById('overlay-quran').classList.add('active');
+  }
+  function closeQuranReader(){
+    document.getElementById('overlay-quran').classList.remove('active');
+    if(quranSessionStart === null) return;
+    const elapsed = Math.floor((Date.now() - quranSessionStart) / 1000);
+    quranSessionStart = null;
+    const wasReached = quranMinutesToday() >= state.quranTargetMin;
+    state.quranSecondsToday += elapsed;
+    state.quranWeek[6] = quranMinutesToday();
+    const nowReached = quranMinutesToday() >= state.quranTargetMin;
+    renderQuran(); renderDashboard();
+    if(elapsed >= 1){
+      showToast(!wasReached && nowReached ? 'Alhamdulillah, target Qur\'an harian tercapai ✅' : `${formatTime(elapsed)} tercatat, teruskan membaca 📖`);
+    }
+  }
+
+  // ---------------- gerak screen + session ----------------
+  function renderGerak(){
+    const minToday = gerakMinutesToday();
+    const reached = minToday >= state.gerakTargetMin;
+    document.getElementById('gerak-big').innerHTML = `${minToday} <span style="font-size:16px; font-weight:500; color:var(--ink-soft);">menit</span>`;
+    document.getElementById('gerak-target-label').textContent = `Target harian: ${state.gerakTargetMin} menit`;
+    document.getElementById('gerak-streak').textContent = `${state.streakDays} hari`;
+    const check = document.getElementById('gerak-check');
+    check.textContent = reached ? '✓' : '🏃';
+    check.classList.toggle('empty', !reached);
+
+    const chart = document.getElementById('gerak-chart');
+    chart.innerHTML = '';
+    const week = state.gerakWeek.slice(0,6).concat([minToday]);
+    const max = Math.max(...week, state.gerakTargetMin);
+    week.forEach((v,i) => {
+      const h = Math.max((v/max)*100, 3);
+      const isToday = i === 6;
+      chart.innerHTML += `<div class="chart-col"><div class="chart-bar" style="height:${h}%; background:${isToday ? 'var(--jism)' : 'var(--jism-soft)'}"></div><div class="chart-day" style="${isToday ? 'color:var(--jism); font-weight:700;' : ''}">${days[i]}</div></div>`;
+    });
+
+    document.getElementById('gerak-history').innerHTML = state.gerakHistory.map(h => `<div class="hist-row"><span class="hist-day">${h.day}</span><span class="hist-val">${h.val}</span></div>`).join('');
+  }
+  document.getElementById('activity-chips').addEventListener('click', (e) => {
+    const chip = e.target.closest('.chip');
+    if(!chip) return;
+    document.querySelectorAll('#activity-chips .chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    state.activeChip = chip.dataset.act;
+  });
+
+  let gerakSessionStart = null;
+  function openGerakSession(){
+    gerakSessionStart = Date.now();
+    document.getElementById('gerak-session-icon').textContent = activityIcons[state.activeChip] || '🏃';
+    document.getElementById('gerak-session-type').textContent = state.activeChip;
+    document.getElementById('overlay-gerak').classList.add('active');
+  }
+  function closeGerakSession(){
+    document.getElementById('overlay-gerak').classList.remove('active');
+    if(gerakSessionStart === null) return;
+    const elapsed = Math.floor((Date.now() - gerakSessionStart) / 1000);
+    gerakSessionStart = null;
+    const wasReached = gerakMinutesToday() >= state.gerakTargetMin;
+    state.gerakSecondsToday += elapsed;
+    state.gerakWeek[6] = gerakMinutesToday();
+    const nowReached = gerakMinutesToday() >= state.gerakTargetMin;
+    renderGerak(); renderDashboard();
+    if(elapsed >= 1){
+      showToast(!wasReached && nowReached ? 'Mantap, target gerak harian tercapai ✅' : `${formatTime(elapsed)} ${state.activeChip.toLowerCase()} tercatat 🏃`);
+    }
+  }
+
+  // ---------------- belajar screen ----------------
+  function renderThemeChips(){
+    document.querySelectorAll('#theme-chips .chip').forEach(c => c.classList.toggle('active-ilmi', c.dataset.theme === state.learnTheme));
+  }
+  document.getElementById('theme-chips').addEventListener('click', (e) => {
+    const chip = e.target.closest('.chip');
+    if(!chip) return;
+    state.learnTheme = chip.dataset.theme;
+    renderThemeChips(); renderStoryList();
+  });
+  function renderStoryList(){
+    const filtered = stories.filter(s => s.theme === state.learnTheme);
+    document.getElementById('story-list').innerHTML = filtered.map(s => {
+      const done = state.storiesRead.has(s.id);
+      return `
+        <div class="story-card" onclick="openStoryReader('${s.id}')">
+          <div class="story-icon">${s.icon}</div>
+          <div class="story-body">
+            <div class="story-title">${s.title}</div>
+            <div class="story-tag">${s.tag}</div>
+            <div class="story-teaser">${s.teaser}</div>
+          </div>
+          <div class="story-side ${done ? 'done' : 'todo'}">${done ? 'Selesai ✓' : 'Baca'}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  let storySessionStart = null;
+  function openStoryReader(id){
+    const s = stories.find(x => x.id === id);
+    if(!s) return;
+    state.openStoryId = id;
+    let html = `<div class="overlay-title">${s.title}</div><div class="overlay-tag">${s.tag}</div>`;
+    s.paragraphs.forEach(p => { html += `<p class="story-p">${p}</p>`; });
+    if(s.quote) html += `<div class="story-quote"><div class="ar">${s.quote.ar}</div><div class="tr">${s.quote.tr}</div></div>`;
+    if(s.paragraphs2) s.paragraphs2.forEach(p => { html += `<p class="story-p">${p}</p>`; });
+    if(s.lesson) html += `<div class="lesson-box"><span class="lesson-label">PELAJARAN</span>${s.lesson}</div>`;
+    document.getElementById('story-body').innerHTML = html;
+    storySessionStart = Date.now();
+    document.getElementById('overlay-story').classList.add('active');
+  }
+  function bankStoryTime(){
+    if(storySessionStart === null) return 0;
+    const elapsed = Math.floor((Date.now() - storySessionStart) / 1000);
+    storySessionStart = null;
+    state.ilmiSecondsToday += elapsed;
+    return elapsed;
+  }
+  function closeStoryReader(){
+    const elapsed = bankStoryTime();
+    document.getElementById('overlay-story').classList.remove('active');
+    state.openStoryId = null;
+    renderDashboard(); renderStoryList();
+    if(elapsed >= 1) showToast(`${formatTime(elapsed)} tercatat ke Ilmi 💡`);
+  }
+  function finishStory(){
+    const id = state.openStoryId;
+    const elapsed = bankStoryTime();
+    document.getElementById('overlay-story').classList.remove('active');
+    if(id){
+      const wasNew = !state.storiesRead.has(id);
+      state.storiesRead.add(id);
+      if(wasNew) showToast('MasyaAllah, kisah selesai dibaca ✨');
+    }
+    state.openStoryId = null;
+    renderDashboard(); renderStoryList();
+  }
+
+  // ---------------- circle screen ----------------
+  function renderCircle(){
+    document.getElementById('friend-list').innerHTML = state.friends.map((f, i) => {
+      const done = f.quran && f.gerak;
+      const action = done
+        ? `<span class="badge-done">Alhamdulillah ✓</span>`
+        : `<button class="btn-nudge ${f.nudged ? 'sent' : ''}" onclick="nudge(${i})" ${f.nudged ? 'disabled' : ''}>${f.nudged ? 'Terkirim' : 'Ingatkan'}</button>`;
+      return `
+        <div class="friend-row">
+          <div class="f-avatar" style="background:${f.color}">${initials(f.name)}</div>
+          <div class="f-info">
+            <div class="f-name">${f.name}</div>
+            <div class="f-status">
+              <span><span class="status-dot" style="background:${f.quran ? 'var(--ilmi)' : 'var(--border)'}"></span>Qur'an</span>
+              <span><span class="status-dot" style="background:${f.gerak ? 'var(--jism)' : 'var(--border)'}"></span>Gerak</span>
+            </div>
+          </div>
+          ${action}
+        </div>
+      `;
+    }).join('');
+  }
+  function nudge(i){
+    state.friends[i].nudged = true;
+    renderCircle();
+    showToast(`Pengingat terkirim ke ${state.friends[i].name} 💬`);
+  }
+  function inviteFriend(){
+    state.invited = true;
+    showToast('Tautan undangan Circle disalin ✉️');
+  }
+
+  // ---------------- init ----------------
+  function renderAll(){
+    document.getElementById('streak-num').textContent = state.streakDays;
+    renderDashboard(); renderQuran(); renderGerak(); renderThemeChips(); renderStoryList(); renderCircle();
+  }
+  renderAll();
+</script>
+</body>
+</html>
