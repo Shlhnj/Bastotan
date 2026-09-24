@@ -68,7 +68,8 @@
   .ring-wrap svg{ width:100%; height:100%; transform:rotate(-90deg); }
   .ring-track{ fill:none; stroke-width:14; }
   .ring-fill{ fill:none; stroke-width:14; stroke-linecap:round; transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1); }
-  @media (prefers-reduced-motion: reduce){ .ring-fill{ transition:none; } }
+  .ring-quran-bg{ transition:fill-opacity .8s cubic-bezier(.4,0,.2,1); }
+  @media (prefers-reduced-motion: reduce){ .ring-fill{ transition:none; } .ring-quran-bg{ transition:none; } }
   .ring-center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
   .ring-streak{ font-family:'Fraunces', serif; font-size:34px; font-weight:600; line-height:1; }
   .ring-streak-label{ font-size:12px; color:var(--ink-soft); margin-top:4px; }
@@ -130,7 +131,7 @@
   .f-avatar{ width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:600; flex-shrink:0; }
   .f-info{ flex:1; min-width:0; }
   .f-name{ font-weight:600; font-size:14.5px; }
-  .f-status{ font-size:12.5px; color:var(--ink-soft); margin-top:2px; display:flex; gap:8px; }
+  .f-status{ font-size:12.5px; color:var(--ink-soft); margin-top:2px; display:flex; gap:7px; flex-wrap:wrap; }
   .status-dot{ width:7px; height:7px; border-radius:50%; display:inline-block; margin-right:4px; vertical-align:middle; }
   .btn-nudge{ border:1.5px solid var(--jism); color:var(--jism); background:transparent; border-radius:999px; padding:8px 13px; font-size:12.5px; font-weight:600; cursor:pointer; flex-shrink:0; font-family:inherit; }
   .btn-nudge.sent{ border-color:var(--border); color:var(--ink-soft); background:var(--surface-2); }
@@ -215,10 +216,11 @@
     <section class="screen active" id="screen-home">
       <div class="hero">
         <p class="hero-greet">Assalamu'alaikum,</p>
-        <p class="hero-name" id="user-name">Shulhan</p>
+        <p class="hero-name" id="user-name">Fajar</p>
 
         <div class="ring-wrap">
           <svg viewBox="0 0 196 196">
+            <circle class="ring-quran-bg" id="ring-quran-bg" cx="98" cy="98" r="48" style="fill:var(--gold); fill-opacity:0.15"/>
             <circle class="ring-track" cx="98" cy="98" r="80" style="stroke:var(--ilmi-soft)"/>
             <circle class="ring-fill" id="ring-ilmi" cx="98" cy="98" r="80" style="stroke:var(--ilmi)"/>
             <circle class="ring-track" cx="98" cy="98" r="58" style="stroke:var(--jism-soft)"/>
@@ -466,11 +468,11 @@
       {day:'3 hari lalu', val:'0 menit'},
     ],
     friends: [
-      {name:'Nadia', color:'#2E5257', quran:true, gerak:true, nudged:false},
-      {name:'Ridho', color:'#B4592F', quran:true, gerak:false, nudged:false},
-      {name:'Salma', color:'#8C6A2E', quran:false, gerak:false, nudged:false},
-      {name:'Umar', color:'#5B7B6E', quran:false, gerak:true, nudged:false},
-      {name:'Zaid', color:'#9C5B45', quran:true, gerak:true, nudged:false},
+      {name:'Nadia', color:'#2E5257', quran:true, ilmi:true, gerak:true, nudged:false},
+      {name:'Ridho', color:'#B4592F', quran:true, ilmi:false, gerak:false, nudged:false},
+      {name:'Salma', color:'#8C6A2E', quran:false, ilmi:false, gerak:false, nudged:false},
+      {name:'Umar', color:'#5B7B6E', quran:false, ilmi:true, gerak:true, nudged:false},
+      {name:'Zaid', color:'#9C5B45', quran:true, ilmi:true, gerak:true, nudged:false},
     ],
     activeChip: 'Jalan kaki',
     learnTheme: 'sirah',
@@ -630,12 +632,15 @@
   function renderDashboard(){
     const ilmiPct = Math.min(ilmiMinutesToday()/state.ilmiTargetMin, 1);
     const jismPct = Math.min(gerakMinutesToday()/state.gerakTargetMin, 1);
+    const quranPct = Math.min(quranMinutesToday()/state.quranTargetMin, 1);
     const ringIlmi = document.getElementById('ring-ilmi');
     const ringJism = document.getElementById('ring-jism');
+    const quranBg = document.getElementById('ring-quran-bg');
     ringIlmi.style.strokeDasharray = CIRC_ILMI;
     ringIlmi.style.strokeDashoffset = CIRC_ILMI * (1 - ilmiPct);
     ringJism.style.strokeDasharray = CIRC_JISM;
     ringJism.style.strokeDashoffset = CIRC_JISM * (1 - jismPct);
+    quranBg.style.fillOpacity = 0.15 + quranPct * 0.85;
 
     document.getElementById('legend-quran').textContent = `${quranMinutesToday()}/${state.quranTargetMin} mnt${quranMinutesToday()>=state.quranTargetMin ? ' ✓' : ''}`;
     document.getElementById('legend-ilmi').textContent = `${ilmiMinutesToday()}/${state.ilmiTargetMin} mnt${ilmiMinutesToday()>=state.ilmiTargetMin ? ' ✓' : ''}`;
@@ -644,7 +649,7 @@
     const wrap = document.getElementById('home-circle-scroll');
     wrap.innerHTML = '';
     state.friends.forEach(f => {
-      const done = f.quran && f.gerak;
+      const done = f.quran && f.ilmi && f.gerak;
       const div = document.createElement('div');
       div.className = 'circle-mini';
       div.innerHTML = `
@@ -870,7 +875,7 @@
   // ---------------- circle screen ----------------
   function renderCircle(){
     document.getElementById('friend-list').innerHTML = state.friends.map((f, i) => {
-      const done = f.quran && f.gerak;
+      const done = f.quran && f.ilmi && f.gerak;
       const action = done
         ? `<span class="badge-done">Alhamdulillah ✓</span>`
         : `<button class="btn-nudge ${f.nudged ? 'sent' : ''}" onclick="nudge(${i})" ${f.nudged ? 'disabled' : ''}>${f.nudged ? 'Terkirim' : 'Ingatkan'}</button>`;
@@ -880,7 +885,8 @@
           <div class="f-info">
             <div class="f-name">${f.name}</div>
             <div class="f-status">
-              <span><span class="status-dot" style="background:${f.quran ? 'var(--ilmi)' : 'var(--border)'}"></span>Qur'an</span>
+              <span><span class="status-dot" style="background:${f.quran ? 'var(--gold)' : 'var(--border)'}"></span>Qur'an</span>
+              <span><span class="status-dot" style="background:${f.ilmi ? 'var(--ilmi)' : 'var(--border)'}"></span>Ilmi</span>
               <span><span class="status-dot" style="background:${f.gerak ? 'var(--jism)' : 'var(--border)'}"></span>Gerak</span>
             </div>
           </div>
