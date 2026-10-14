@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Bastotan: Luas Ilmu, Kuat Raga, Sukses Dunia Akhirat </title>
+<title>Bastotan: Luas Ilmu, Kuat Raga, Tumbuh Bersama</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=Amiri+Quran&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#EFEEE6; --surface:#FFFFFF; --surface-2:#F7F5EE;
@@ -14,6 +14,8 @@
     --ilmi:#2E5257; --ilmi-soft:#DCE7E6;
     --jism:#B4592F; --jism-soft:#F3E1D2;
     --gold:#8C6A2E; --gold-soft:#EDE3C9;
+    --map-road:#FFFFFF; --map-park:#DCE5D2; --map-water:#D3E2E4;
+    --page:#FCF9F0;
     --shadow: 0 12px 28px -16px rgba(35,40,31,0.35);
     color-scheme: light;
   }
@@ -24,6 +26,7 @@
       --ilmi:#83BCB9; --ilmi-soft:#20302E;
       --jism:#E38C55; --jism-soft:#33271C;
       --gold:#D8BA6E; --gold-soft:#332C1C;
+      --map-road:#30372B; --map-park:#25301F; --map-water:#1F2D2E; --page:#1C211A;
       --shadow: 0 14px 30px -16px rgba(0,0,0,0.55);
     }
   }
@@ -33,6 +36,7 @@
     --ilmi:#83BCB9; --ilmi-soft:#20302E;
     --jism:#E38C55; --jism-soft:#33271C;
     --gold:#D8BA6E; --gold-soft:#332C1C;
+    --map-road:#30372B; --map-park:#25301F; --map-water:#1F2D2E; --page:#1C211A;
     --shadow: 0 14px 30px -16px rgba(0,0,0,0.55);
   }
   *{ box-sizing:border-box; }
@@ -42,7 +46,7 @@
     font-family:'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing:antialiased; min-height:100vh;
   }
-  .display{ font-family:'Fraunces', ui-serif, Georgia, serif; }
+  button{ font-family:inherit; }
   .app{ max-width:440px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; position:relative; background:var(--bg); }
 
   .topbar{ padding:22px 20px 6px; display:flex; align-items:center; justify-content:space-between; }
@@ -51,94 +55,130 @@
   .brand-name{ font-family:'Fraunces', serif; font-weight:600; font-size:21px; letter-spacing:0.2px; }
   .brand-verse{ font-size:12.5px; color:var(--ink-soft); direction:rtl; font-family:'Fraunces', serif; background:none; border:none; cursor:pointer; padding:0; }
 
-  main{ flex:1; padding:4px 20px 100px; overflow-x:hidden; }
+  main{ flex:1; padding:4px 20px 110px; overflow-x:hidden; }
   .screen{ display:none; animation:fadeIn .35s ease; }
   .screen.active{ display:block; }
   @keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
   @media (prefers-reduced-motion: reduce){ .screen{ animation:none; } }
 
   h1.page-title{ font-family:'Fraunces', serif; font-weight:600; font-size:24px; margin:14px 0 4px; }
-  .page-sub{ color:var(--ink-soft); font-size:14px; margin:0 0 18px; }
-
-  .hero{ background:var(--surface); border:1px solid var(--border); border-radius:26px; padding:26px 22px 22px; box-shadow:var(--shadow); margin-top:10px; }
-  .hero-greet{ font-size:14px; color:var(--ink-soft); margin:0 0 2px; }
-  .hero-name{ font-family:'Fraunces', serif; font-size:21px; font-weight:600; margin:0 0 18px; }
-
-  .ring-wrap{ position:relative; width:196px; height:196px; margin:0 auto 6px; }
-  .ring-wrap svg{ width:100%; height:100%; transform:rotate(-90deg); }
-  .ring-track{ fill:none; stroke-width:14; }
-  .ring-fill{ fill:none; stroke-width:14; stroke-linecap:round; transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1); }
-  .ring-quran-bg{ transition:fill-opacity .8s cubic-bezier(.4,0,.2,1); }
-  @media (prefers-reduced-motion: reduce){ .ring-fill{ transition:none; } .ring-quran-bg{ transition:none; } }
-  .ring-center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
-  .ring-streak{ font-family:'Fraunces', serif; font-size:34px; font-weight:600; line-height:1; }
-  .ring-streak-label{ font-size:12px; color:var(--ink-soft); margin-top:4px; }
-
-  .legend-row{ display:flex; justify-content:center; gap:16px; margin-top:16px; flex-wrap:wrap; }
-  .legend-item{ display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--ink-soft); }
-  .dot{ width:9px; height:9px; border-radius:50%; flex-shrink:0; }
-
-  .badge-link{ text-align:center; font-size:12.5px; font-weight:600; color:var(--gold); margin-top:14px; cursor:pointer; }
-
-  .cta-row{ display:flex; gap:10px; margin-top:16px; }
-  .btn{ border:none; cursor:pointer; font-family:inherit; font-weight:600; font-size:14px; border-radius:999px; padding:13px 16px; flex:1; display:flex; align-items:center; justify-content:center; gap:7px; transition:transform .12s ease, opacity .12s ease; }
-  .btn:active{ transform:scale(0.97); }
-  .btn-ilmi{ background:var(--ilmi); color:#fff; }
-  .btn-jism{ background:var(--jism); color:#fff; }
-  .btn-ghost{ background:var(--surface-2); color:var(--ink); border:1px solid var(--border); }
-  .btn-outline{ background:transparent; color:var(--ink); border:1.5px solid var(--border); }
-  .btn-full{ width:100%; margin-top:14px; }
+  .page-sub{ color:var(--ink-soft); font-size:14px; margin:0 0 16px; line-height:1.45; }
+  .section-label{ font-size:12.5px; font-weight:600; color:var(--ink-soft); margin:22px 0 2px; text-transform:uppercase; letter-spacing:0.6px; }
+  .back-link{ background:none; border:none; color:var(--ink-soft); font-size:13.5px; font-weight:600; cursor:pointer; padding:10px 0 0; }
 
   .card{ background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:18px; margin-top:14px; }
-  .card-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+  .card-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; gap:10px; }
   .card-title{ font-weight:600; font-size:15px; }
   .card-tag{ font-size:12px; color:var(--ink-soft); }
+  .link{ cursor:pointer; text-decoration:underline; }
 
-  .stat-row{ display:flex; align-items:center; justify-content:space-between; gap:14px; }
-  .stat-big{ font-family:'Fraunces', serif; font-size:30px; font-weight:600; line-height:1; }
-  .stat-target{ font-size:13px; color:var(--ink-soft); margin-top:6px; }
-  .stat-streak{ font-size:12.5px; color:var(--ink-soft); margin-top:14px; }
-  .stat-streak b{ color:var(--ink); font-weight:700; }
-  .check-circle{ width:64px; height:64px; border-radius:50%; background:var(--jism-soft); display:flex; align-items:center; justify-content:center; font-size:26px; flex-shrink:0; color:var(--jism); }
-  .check-circle.empty{ background:var(--surface-2); color:var(--border); }
-  .check-circle.ilmi-tone{ background:var(--ilmi-soft); color:var(--ilmi); }
-
-  .circle-scroll{ display:flex; gap:14px; overflow-x:auto; padding:2px 2px 6px; scrollbar-width:none; }
-  .circle-scroll::-webkit-scrollbar{ display:none; }
-  .circle-mini{ display:flex; flex-direction:column; align-items:center; gap:6px; flex-shrink:0; width:58px; }
-  .mini-avatar{ width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:600; color:#fff; font-size:15px; position:relative; border:2.5px solid var(--surface); }
-  .mini-avatar.done{ box-shadow:0 0 0 2.5px var(--jism); }
-  .mini-avatar.pending{ box-shadow:0 0 0 2.5px var(--border); opacity:0.85; }
-  .mini-name{ font-size:11px; color:var(--ink-soft); text-align:center; line-height:1.2; }
+  .btn{ border:none; cursor:pointer; font-weight:600; font-size:14px; border-radius:999px; padding:13px 16px; flex:1; display:flex; align-items:center; justify-content:center; gap:7px; transition:transform .12s ease; }
+  .btn:active{ transform:scale(0.97); }
+  .btn-ilmi{ background:var(--ilmi); color:var(--surface); }
+  .btn-jism{ background:var(--jism); color:var(--surface); }
+  .btn-gold{ background:var(--gold); color:var(--surface); }
+  .btn-outline{ background:transparent; color:var(--ink); border:1.5px solid var(--border); }
+  .btn-full{ width:100%; margin-top:14px; }
+  .pill-btn{ border:1.5px solid var(--ilmi); color:var(--ilmi); background:transparent; border-radius:999px; padding:8px 13px; font-size:12.5px; font-weight:600; cursor:pointer; flex-shrink:0; align-self:center; }
+  .pill-btn.jism{ border-color:var(--jism); color:var(--jism); }
+  .pill-btn.done{ border-color:var(--border); color:var(--ink-soft); background:var(--surface-2); cursor:default; }
 
   .chip-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top:4px; }
   .chip{ border:1.5px solid var(--border); background:var(--surface-2); color:var(--ink-soft); padding:9px 14px; border-radius:999px; font-size:13px; cursor:pointer; font-weight:500; }
   .chip.active{ border-color:var(--jism); background:var(--jism-soft); color:var(--jism); font-weight:600; }
   .chip.active-ilmi{ border-color:var(--ilmi); background:var(--ilmi-soft); color:var(--ilmi); font-weight:600; }
 
+  /* ---------- komunitas ---------- */
+  .comm-scroll{ display:flex; gap:10px; overflow-x:auto; padding:2px 2px 6px; margin:0 -2px; scrollbar-width:none; }
+  .comm-scroll::-webkit-scrollbar{ display:none; }
+  .comm-chip{ flex-shrink:0; display:flex; align-items:center; gap:8px; padding:10px 14px; border-radius:16px; border:1.5px solid var(--border); background:var(--surface); cursor:pointer; font-size:13.5px; font-weight:600; color:var(--ink); }
+  .comm-chip.active{ border-color:var(--ilmi); background:var(--ilmi-soft); color:var(--ilmi); }
+  .comm-chip.add{ border-style:dashed; color:var(--ink-soft); font-weight:500; }
+  .comm-hero{ background:var(--surface); border:1px solid var(--border); border-radius:24px; padding:20px; margin-top:12px; box-shadow:var(--shadow); }
+  .comm-top{ display:flex; gap:14px; align-items:center; }
+  .comm-icon{ width:52px; height:52px; border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:24px; background:var(--ilmi-soft); flex-shrink:0; }
+  .comm-name{ font-family:'Fraunces', serif; font-size:20px; font-weight:600; line-height:1.2; }
+  .comm-meta{ font-size:12.5px; color:var(--ink-soft); margin-top:3px; }
+  .goal{ margin-top:16px; }
+  .goal-head{ display:flex; justify-content:space-between; gap:10px; font-size:13.5px; margin-bottom:7px; }
+  .goal-head b{ font-weight:600; }
+  .goal-val{ color:var(--ink-soft); font-size:12.5px; white-space:nowrap; }
+  .progress{ height:10px; border-radius:999px; background:var(--surface-2); overflow:hidden; border:1px solid var(--border); }
+  .progress > span{ display:block; height:100%; border-radius:999px; transition:width .6s ease; }
+  @media (prefers-reduced-motion: reduce){ .progress > span{ transition:none; } }
+  .agenda{ display:flex; gap:12px; align-items:center; margin-top:16px; padding-top:14px; border-top:1px solid var(--border); }
+  .agenda-icon{ width:38px; height:38px; border-radius:12px; background:var(--gold-soft); display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0; }
+  .agenda-title{ font-weight:600; font-size:14px; }
+  .agenda-when{ font-size:12.5px; color:var(--ink-soft); margin-top:2px; }
+
+  .member-row{ display:flex; align-items:center; gap:12px; padding:12px 0; border-top:1px solid var(--border); }
+  .member-row:first-child{ border-top:none; padding-top:2px; }
+  .m-avatar{ width:42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:600; flex-shrink:0; }
+  .m-info{ flex:1; min-width:0; }
+  .m-name{ font-weight:600; font-size:14.5px; }
+  .m-sub{ font-size:12.5px; color:var(--ink-soft); margin-top:2px; }
+  .status-pill{ font-size:12px; font-weight:600; padding:7px 11px; border-radius:999px; flex-shrink:0; }
+  .status-pill.done{ color:var(--jism); background:var(--jism-soft); }
+  .private-note{ font-size:12px; color:var(--ink-soft); margin-top:12px; line-height:1.45; display:flex; gap:7px; }
+
+  /* ---------- peta ---------- */
+  .map{ position:relative; height:260px; border-radius:22px; overflow:hidden; border:1px solid var(--border); background:var(--surface-2); margin-top:4px; }
+  .map svg.base{ position:absolute; inset:0; width:100%; height:100%; }
+  .pin{ position:absolute; transform:translate(-50%,-100%); border:none; background:none; cursor:pointer; padding:0; }
+  .pin-dot{ width:34px; height:34px; border-radius:50% 50% 50% 0; transform:rotate(-45deg); display:flex; align-items:center; justify-content:center; border:2px solid var(--surface); box-shadow:0 6px 14px -6px rgba(0,0,0,0.5); }
+  .pin-dot span{ transform:rotate(45deg); font-size:15px; }
+  .pin.masjid .pin-dot{ background:var(--ilmi); }
+  .pin.komunitas .pin-dot{ background:var(--jism); }
+  .pin.selected .pin-dot{ box-shadow:0 0 0 3px var(--ink); }
+  .pin.dim{ opacity:0.3; }
+  .me-dot{ position:absolute; left:50%; top:52%; width:16px; height:16px; border-radius:50%; background:var(--gold); border:3px solid var(--surface); transform:translate(-50%,-50%); box-shadow:0 0 0 8px color-mix(in srgb, var(--gold) 22%, transparent); }
+  .map-legend{ display:flex; gap:14px; font-size:12px; color:var(--ink-soft); margin-top:10px; flex-wrap:wrap; }
+  .map-legend span{ display:flex; align-items:center; gap:6px; }
+  .dot{ width:9px; height:9px; border-radius:50%; display:inline-block; flex-shrink:0; }
+  .place-row{ display:flex; gap:12px; padding:13px 0; border-top:1px solid var(--border); align-items:flex-start; cursor:pointer; }
+  .place-row:first-child{ border-top:none; padding-top:2px; }
+  .place-row.selected .place-name{ color:var(--ilmi); }
+  .place-icon{ width:42px; height:42px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:19px; flex-shrink:0; }
+  .place-body{ flex:1; min-width:0; }
+  .place-name{ font-weight:600; font-size:14.5px; }
+  .place-meta{ font-size:12px; color:var(--ink-soft); margin-top:2px; }
+  .place-acts{ display:flex; gap:6px; flex-wrap:wrap; margin-top:7px; }
+  .act-tag{ font-size:11.5px; background:var(--surface-2); border:1px solid var(--border); border-radius:999px; padding:3px 9px; color:var(--ink-soft); }
+
+  /* ---------- tracker ---------- */
+  .hero{ background:var(--surface); border:1px solid var(--border); border-radius:26px; padding:24px 22px 22px; box-shadow:var(--shadow); margin-top:10px; }
+  .hero-greet{ font-size:14px; color:var(--ink-soft); margin:0 0 2px; }
+  .hero-name{ font-family:'Fraunces', serif; font-size:21px; font-weight:600; margin:0 0 16px; }
+  .ring-wrap{ position:relative; width:186px; height:186px; margin:0 auto 6px; }
+  .ring-wrap svg{ width:100%; height:100%; transform:rotate(-90deg); }
+  .ring-track{ fill:none; stroke-width:14; }
+  .ring-fill{ fill:none; stroke-width:14; stroke-linecap:round; transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1); }
+  .ring-quran-bg{ transition:fill-opacity .8s cubic-bezier(.4,0,.2,1); }
+  @media (prefers-reduced-motion: reduce){ .ring-fill, .ring-quran-bg{ transition:none; } }
+  .ring-center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+  .ring-streak{ font-family:'Fraunces', serif; font-size:34px; font-weight:600; line-height:1; }
+  .ring-streak-label{ font-size:12px; color:var(--ink-soft); margin-top:4px; }
+  .action-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:14px; }
+  .action-card{ border:1px solid var(--border); background:var(--surface); border-radius:18px; padding:16px 8px 14px; text-align:center; cursor:pointer; color:var(--ink); transition:transform .12s ease; }
+  .action-card:active{ transform:scale(0.97); }
+  .action-icon{ width:48px; height:48px; border-radius:14px; margin:0 auto 9px; display:flex; align-items:center; justify-content:center; font-size:22px; }
+  .action-label{ font-weight:600; font-size:14px; }
+  .action-sub{ font-size:12px; color:var(--ink-soft); margin-top:3px; }
+  .feed-note{ display:flex; gap:10px; align-items:center; background:var(--ilmi-soft); color:var(--ilmi); border-radius:16px; padding:13px 15px; font-size:13px; margin-top:14px; line-height:1.4; }
+
+  .stat-row{ display:flex; align-items:center; justify-content:space-between; gap:14px; }
+  .stat-big{ font-family:'Fraunces', serif; font-size:30px; font-weight:600; line-height:1; }
+  .stat-unit{ font-size:16px; font-weight:500; color:var(--ink-soft); }
+  .stat-target{ font-size:13px; color:var(--ink-soft); margin-top:6px; }
+  .check-circle{ width:64px; height:64px; border-radius:50%; background:var(--jism-soft); display:flex; align-items:center; justify-content:center; font-size:26px; flex-shrink:0; color:var(--jism); }
+  .check-circle.empty{ background:var(--surface-2); color:var(--border); }
   .chart{ display:flex; align-items:flex-end; gap:8px; height:92px; margin-top:6px; }
   .chart-col{ flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; height:100%; justify-content:flex-end; }
   .chart-bar{ width:100%; max-width:26px; border-radius:6px 6px 3px 3px; min-height:4px; transition:height .5s ease; }
   .chart-day{ font-size:11px; color:var(--ink-soft); }
 
-  .hist-row{ display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-top:1px solid var(--border); font-size:13.5px; }
-  .hist-row:first-child{ border-top:none; }
-  .hist-day{ color:var(--ink-soft); }
-  .hist-val{ font-weight:600; }
-
-  .friend-row{ display:flex; align-items:center; gap:12px; padding:13px 0; border-top:1px solid var(--border); }
-  .friend-row:first-child{ border-top:none; }
-  .f-avatar{ width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:600; flex-shrink:0; }
-  .f-info{ flex:1; min-width:0; }
-  .f-name{ font-weight:600; font-size:14.5px; }
-  .f-status{ font-size:12.5px; color:var(--ink-soft); margin-top:2px; display:flex; gap:7px; flex-wrap:wrap; }
-  .status-dot{ width:7px; height:7px; border-radius:50%; display:inline-block; margin-right:4px; vertical-align:middle; }
-  .btn-nudge{ border:1.5px solid var(--jism); color:var(--jism); background:transparent; border-radius:999px; padding:8px 13px; font-size:12.5px; font-weight:600; cursor:pointer; flex-shrink:0; font-family:inherit; }
-  .btn-nudge.sent{ border-color:var(--border); color:var(--ink-soft); background:var(--surface-2); }
-  .badge-done{ font-size:12px; font-weight:600; color:var(--jism); background:var(--jism-soft); padding:7px 11px; border-radius:999px; flex-shrink:0; }
-
   .story-card{ display:flex; gap:12px; padding:14px 0; border-top:1px solid var(--border); cursor:pointer; align-items:flex-start; }
-  .story-card:first-child{ border-top:none; }
+  .story-card:first-child{ border-top:none; padding-top:2px; }
   .story-icon{ width:42px; height:42px; border-radius:12px; background:var(--surface-2); display:flex; align-items:center; justify-content:center; font-size:19px; flex-shrink:0; }
   .story-body{ flex:1; min-width:0; }
   .story-title{ font-weight:600; font-size:14.5px; margin-bottom:2px; }
@@ -148,24 +188,49 @@
   .story-side.done{ color:var(--jism); }
   .story-side.todo{ color:var(--ilmi); }
 
-  .event-card{ display:flex; gap:12px; padding:14px 0; border-top:1px solid var(--border); align-items:flex-start; }
-  .event-card:first-child{ border-top:none; }
-  .event-icon{ width:42px; height:42px; border-radius:12px; background:var(--surface-2); display:flex; align-items:center; justify-content:center; font-size:19px; flex-shrink:0; }
-  .event-tag-waktu{ color:var(--gold); }
-  .event-tag-lokasi{ color:var(--jism); }
-  .btn-join{ border:1.5px solid var(--ilmi); color:var(--ilmi); background:transparent; border-radius:999px; padding:8px 13px; font-size:12.5px; font-weight:600; cursor:pointer; flex-shrink:0; font-family:inherit; align-self:center; }
-  .btn-join.joined{ border-color:var(--border); color:var(--ink-soft); background:var(--surface-2); }
+  /* ---------- event ---------- */
+  .row-item{ display:flex; gap:12px; padding:14px 0; border-top:1px solid var(--border); align-items:flex-start; }
+  .row-item:first-child{ border-top:none; padding-top:2px; }
+  .row-icon{ width:42px; height:42px; border-radius:12px; background:var(--surface-2); display:flex; align-items:center; justify-content:center; font-size:19px; flex-shrink:0; }
+  .tag-waktu{ color:var(--gold); }
+  .tag-lokasi{ color:var(--jism); }
+  .tag-komunitas{ color:var(--ilmi); }
+  .mini-progress{ margin-top:9px; }
+  .mini-progress .progress{ height:7px; }
+  .mini-progress .goal-val{ display:block; margin-top:5px; }
 
-  .toast{ position:fixed; left:50%; bottom:96px; transform:translate(-50%, 20px); background:var(--ink); color:var(--bg); padding:12px 18px; border-radius:14px; font-size:13.5px; opacity:0; pointer-events:none; transition:opacity .25s ease, transform .25s ease; z-index:120; max-width:380px; text-align:center; box-shadow:0 10px 24px -8px rgba(0,0,0,0.4); }
+  /* ---------- saya ---------- */
+  .profile{ display:flex; align-items:center; gap:14px; }
+  .p-avatar{ width:62px; height:62px; border-radius:50%; background:var(--ilmi); color:#fff; display:flex; align-items:center; justify-content:center; font-family:'Fraunces', serif; font-size:26px; font-weight:600; flex-shrink:0; }
+  .p-name{ font-family:'Fraunces', serif; font-size:21px; font-weight:600; }
+  .p-meta{ font-size:13px; color:var(--ink-soft); margin-top:3px; }
+  .stat-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
+  .stat-tile{ background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:16px; }
+  .stat-tile .v{ font-family:'Fraunces', serif; font-size:26px; font-weight:600; line-height:1.1; }
+  .stat-tile .l{ font-size:12.5px; color:var(--ink-soft); margin-top:4px; }
+  .badge-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px 10px; margin-top:6px; }
+  .badge-tile{ display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; }
+  .badge-icon{ width:60px; height:60px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:25px; background:var(--surface-2); border:1px solid var(--border); }
+  .badge-label{ font-size:11px; color:var(--ink-soft); line-height:1.25; max-width:82px; }
+  .badge-label.unlocked{ color:var(--ink); font-weight:600; }
+  .hist-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 0; border-top:1px solid var(--border); font-size:13.5px; }
+  .hist-row:first-child{ border-top:none; padding-top:2px; }
+  .hist-day{ color:var(--ink-soft); flex-shrink:0; }
+  .hist-val{ font-weight:600; text-align:right; }
+  .empty-text{ font-size:13px; color:var(--ink-soft); }
+
+  /* ---------- tabbar ---------- */
+  nav.tabbar{ position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:440px; background:var(--surface); border-top:1px solid var(--border); display:flex; padding:7px 2px calc(7px + env(safe-area-inset-bottom)); z-index:50; }
+  .tab-btn{ flex:1; background:none; border:none; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:3px; padding:5px 1px; color:var(--ink-soft); font-size:10.5px; font-weight:500; }
+  .tab-btn .tab-icon{ font-size:19px; height:24px; display:flex; align-items:center; }
+  .tab-btn.active{ color:var(--ink); font-weight:700; }
+  .tab-btn.center .tab-icon{ width:54px; height:54px; border-radius:50%; background:var(--ilmi); color:#fff; justify-content:center; margin-top:-26px; border:4px solid var(--bg); box-shadow:var(--shadow); font-size:22px; }
+  .tab-btn.center.active .tab-icon{ background:var(--jism); }
+
+  .toast{ position:fixed; left:50%; bottom:100px; transform:translate(-50%, 20px); background:var(--ink); color:var(--bg); padding:12px 18px; border-radius:14px; font-size:13.5px; opacity:0; pointer-events:none; transition:opacity .25s ease, transform .25s ease; z-index:120; max-width:min(380px, calc(100vw - 40px)); width:max-content; text-align:center; box-shadow:0 10px 24px -8px rgba(0,0,0,0.4); }
   .toast.show{ opacity:1; transform:translate(-50%, 0); }
 
-  nav.tabbar{ position:sticky; bottom:0; left:0; right:0; background:var(--surface); border-top:1px solid var(--border); display:flex; padding:7px 2px calc(7px + env(safe-area-inset-bottom)); max-width:440px; margin:0 auto; }
-  .tab-btn{ flex:1; background:none; border:none; cursor:pointer; font-family:inherit; display:flex; flex-direction:column; align-items:center; gap:3px; padding:5px 1px; color:var(--ink-soft); font-size:10px; font-weight:500; }
-  .tab-btn .tab-icon{ font-size:19px; }
-  .tab-btn.active{ color:var(--ink); }
-
-  .section-label{ font-size:12.5px; font-weight:600; color:var(--ink-soft); margin:20px 0 2px; }
-
+  /* ---------- overlays ---------- */
   .overlay{ position:fixed; inset:0; background:var(--bg); z-index:100; display:none; flex-direction:column; max-width:440px; margin:0 auto; }
   .overlay.active{ display:flex; }
   .overlay-header{ display:flex; align-items:center; justify-content:space-between; padding:18px 20px 8px; }
@@ -175,28 +240,31 @@
   .overlay-body{ flex:1; overflow-y:auto; padding:8px 20px 20px; }
   .overlay-title{ font-family:'Fraunces', serif; font-size:22px; font-weight:600; margin:6px 0 4px; }
   .overlay-tag{ font-size:12.5px; color:var(--ink-soft); margin-bottom:16px; }
-  .ayat-card{ background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:12px; }
-  .ayat-num{ display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:50%; background:var(--ilmi-soft); color:var(--ilmi); font-size:12px; font-weight:700; margin-bottom:10px; }
-  .ayat-arabic{ font-family:'Fraunces', serif; font-size:22px; line-height:1.9; direction:rtl; text-align:right; margin-bottom:8px; }
-  .ayat-translate{ font-size:13.5px; color:var(--ink-soft); line-height:1.5; }
   .overlay-footer{ padding:12px 20px calc(14px + env(safe-area-inset-bottom)); border-top:1px solid var(--border); }
-  .story-p{ font-size:14.5px; line-height:1.75; margin:0 0 14px; color:var(--ink); }
+  /* ---------- mushaf 15 baris ---------- */
+  .mushaf-page{ background:var(--page); border:1px solid var(--border); outline:2px solid var(--gold-soft); outline-offset:-7px; border-radius:14px; padding:16px 16px 12px; direction:rtl; color:var(--ink); touch-action:pan-y; user-select:none; }
+  .m-head{ display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--ink-soft); padding:0 4px 8px; border-bottom:1px solid var(--border); margin-bottom:6px; direction:rtl; }
+  .m-head .ar{ font-family:'Amiri Quran', 'Scheherazade New', serif; font-size:15px; color:var(--gold); }
+  .surah-banner{ border:1.5px solid var(--gold); background:var(--gold-soft); border-radius:999px; text-align:center; font-family:'Amiri Quran', serif; font-size:18px; color:var(--gold); padding:2px 0 6px; margin:8px 10px 4px; }
+  .m-lines{ font-family:'Amiri Quran', 'Scheherazade New', serif; font-size:20px; }
+  .m-line{ white-space:nowrap; text-align:justify; text-align-last:justify; line-height:1.95; }
+  .m-line.center{ text-align:center; text-align-last:center; }
+  .m-foot{ text-align:center; font-size:12px; color:var(--ink-soft); margin-top:6px; padding-top:6px; border-top:1px solid var(--border); }
+  .reader-nav{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .reader-nav .btn{ padding:11px 12px; font-size:13.5px; }
+  .reader-nav .page-ind{ flex:1.1; text-align:center; font-size:13px; color:var(--ink-soft); font-weight:600; }
+  .credit{ font-size:11px; color:var(--ink-soft); text-align:center; margin-top:10px; line-height:1.4; }
+  .credit a{ color:inherit; }
+  .story-p{ font-size:14.5px; line-height:1.75; margin:0 0 14px; }
   .story-quote{ background:var(--ilmi-soft); border-left:4px solid var(--ilmi); border-radius:10px; padding:14px 16px; margin:4px 0 18px; }
   .story-quote .ar{ font-family:'Fraunces', serif; font-size:19px; direction:rtl; text-align:right; color:var(--ilmi); margin-bottom:6px; }
   .story-quote .tr{ font-size:13px; color:var(--ink-soft); }
-  .lesson-box{ background:var(--jism-soft); border-radius:12px; padding:14px 16px; font-size:13.5px; color:var(--ink); margin-top:6px; }
+  .lesson-box{ background:var(--jism-soft); border-radius:12px; padding:14px 16px; font-size:13.5px; margin-top:6px; }
   .lesson-label{ font-weight:700; color:var(--jism); font-size:12px; margin-bottom:4px; display:block; }
-
   .gerak-session{ display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 10px; text-align:center; }
   .gerak-session-icon{ font-size:64px; margin-bottom:18px; }
   .gerak-session-type{ font-family:'Fraunces', serif; font-size:20px; font-weight:600; margin-bottom:8px; }
   .gerak-session-hint{ font-size:13.5px; color:var(--ink-soft); max-width:260px; }
-
-  .badge-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px 10px; margin-top:8px; }
-  .badge-tile{ display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; }
-  .badge-icon{ width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:26px; background:var(--surface-2); border:1px solid var(--border); }
-  .badge-label{ font-size:11px; color:var(--ink-soft); line-height:1.25; max-width:82px; }
-  .badge-label.unlocked-label{ color:var(--ink); font-weight:600; }
 </style>
 </head>
 <body>
@@ -207,17 +275,79 @@
       <span class="mark">🌙</span>
       <div class="brand-name">Bastotan</div>
     </div>
-    <button class="brand-verse" onclick="openAchievements()" title="Lihat lencana">بَسْطَةً فِي الْعِلْمِ وَالْجِسْمِ</button>
+    <button class="brand-verse" onclick="goTo('saya')" title="Profil dan lencana">بَسْطَةً فِي الْعِلْمِ وَالْجِسْمِ</button>
   </div>
 
   <main>
 
-    <!-- ================= HOME ================= -->
-    <section class="screen active" id="screen-home">
+    <!-- ================= KOMUNITAS (beranda) ================= -->
+    <section class="screen active" id="screen-komunitas">
+      <h1 class="page-title">Komunitasmu</h1>
+      <p class="page-sub">Tumbuh bersama dalam ilmu dan raga, saling menguatkan dalam kebaikan.</p>
+
+      <div class="comm-scroll" id="comm-scroll"></div>
+      <div id="comm-detail"></div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">Anggota hari ini</span>
+          <span class="card-tag" id="member-count"></span>
+        </div>
+        <div id="member-list"></div>
+        <div class="private-note">🔒 <span>Anggota hanya melihat sudah atau belum, bukan detail ibadahmu. Saling menyemangati, jauh dari riya.</span></div>
+      </div>
+
+      <button class="btn btn-outline btn-full" onclick="inviteFriend()">➕ Undang teman ke komunitas ini</button>
+      <p class="section-label">Fastabiqul khairat, berlomba dalam kebaikan</p>
+    </section>
+
+    <!-- ================= PETA ================= -->
+    <section class="screen" id="screen-peta">
+      <h1 class="page-title">Peta</h1>
+      <p class="page-sub">Temukan masjid dan komunitas di sekitarmu, lalu bergabung agar kegiatannya berlanjut bersama.</p>
+
+      <div class="chip-row" id="place-chips" style="margin-bottom:10px;">
+        <button class="chip active-ilmi" data-filter="semua">Semua</button>
+        <button class="chip" data-filter="masjid">Masjid</button>
+        <button class="chip" data-filter="komunitas">Komunitas</button>
+      </div>
+
+      <div class="map" id="map">
+        <svg class="base" viewBox="0 0 400 260" preserveAspectRatio="none" aria-hidden="true">
+          <rect x="0" y="0" width="400" height="260" fill="var(--surface-2)"/>
+          <path d="M250 0 C 270 60, 330 70, 400 60 L400 0 Z" fill="var(--map-water)"/>
+          <rect x="34" y="150" width="96" height="62" rx="14" fill="var(--map-park)"/>
+          <rect x="262" y="150" width="70" height="44" rx="12" fill="var(--map-park)"/>
+          <path d="M0 132 L400 120" stroke="var(--map-road)" stroke-width="14" fill="none"/>
+          <path d="M196 0 L206 260" stroke="var(--map-road)" stroke-width="12" fill="none"/>
+          <path d="M0 60 C 90 70, 120 90, 196 96" stroke="var(--map-road)" stroke-width="8" fill="none"/>
+          <path d="M206 190 C 270 200, 330 230, 400 228" stroke="var(--map-road)" stroke-width="8" fill="none"/>
+          <path d="M60 260 L120 132" stroke="var(--map-road)" stroke-width="7" fill="none"/>
+          <path d="M300 120 L320 0" stroke="var(--map-road)" stroke-width="7" fill="none"/>
+        </svg>
+        <div id="pins"></div>
+        <div class="me-dot" title="Lokasimu"></div>
+      </div>
+      <div class="map-legend">
+        <span><i class="dot" style="background:var(--ilmi)"></i>Masjid</span>
+        <span><i class="dot" style="background:var(--jism)"></i>Komunitas</span>
+        <span><i class="dot" style="background:var(--gold)"></i>Lokasimu</span>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">Terdekat</span>
+          <span class="card-tag">ketuk untuk melihat di peta</span>
+        </div>
+        <div id="place-list"></div>
+      </div>
+    </section>
+
+    <!-- ================= TRACKER ================= -->
+    <section class="screen" id="screen-tracker">
       <div class="hero">
         <p class="hero-greet">Assalamu'alaikum,</p>
-        <p class="hero-name" id="user-name">Shulhan</p>
-
+        <p class="hero-name">Shulhan</p>
         <div class="ring-wrap">
           <svg viewBox="0 0 196 196">
             <circle class="ring-quran-bg" id="ring-quran-bg" cx="98" cy="98" r="48" style="fill:var(--gold); fill-opacity:0.15"/>
@@ -231,176 +361,190 @@
             <div class="ring-streak-label">hari beruntun</div>
           </div>
         </div>
-
-        <div class="legend-row">
-          <div class="legend-item"><span class="dot" style="background:var(--gold)"></span> Qur'an — <span id="legend-quran">0/1 mnt</span></div>
-          <div class="legend-item"><span class="dot" style="background:var(--ilmi)"></span> Ilmi — <span id="legend-ilmi">0/1 mnt</span></div>
-          <div class="legend-item"><span class="dot" style="background:var(--jism)"></span> Jism — <span id="legend-jism">0/30 mnt</span></div>
-        </div>
-
-        <div class="badge-link" onclick="openAchievements()">🏅 Lihat Lencana</div>
-
-        <div class="cta-row">
-          <button class="btn btn-ilmi" onclick="goTo('quran')">📖 Baca Qur'an</button>
-          <button class="btn btn-jism" onclick="goTo('gerak')">🏃 Mulai Gerak</button>
-        </div>
       </div>
 
-      <div class="card">
-        <div class="card-head">
-          <span class="card-title">Circle-mu hari ini</span>
-          <span class="card-tag" onclick="goTo('circle')" style="cursor:pointer; text-decoration:underline;">Lihat semua</span>
-        </div>
-        <div class="circle-scroll" id="home-circle-scroll"></div>
+      <div class="action-grid">
+        <button class="action-card" onclick="goTo('quran')">
+          <div class="action-icon" style="background:var(--gold-soft)">📖</div>
+          <div class="action-label">Qur'an</div>
+          <div class="action-sub" id="act-quran">0/1 mnt</div>
+        </button>
+        <button class="action-card" onclick="goTo('gerak')">
+          <div class="action-icon" style="background:var(--jism-soft)">🏃</div>
+          <div class="action-label">Gerak</div>
+          <div class="action-sub" id="act-gerak">0/30 mnt</div>
+        </button>
+        <button class="action-card" onclick="goTo('belajar')">
+          <div class="action-icon" style="background:var(--ilmi-soft)">📚</div>
+          <div class="action-label">Belajar</div>
+          <div class="action-sub" id="act-ilmi">0/1 mnt</div>
+        </button>
       </div>
 
-      <p class="section-label">Fastabiqul khairat — berlomba dalam kebaikan, bukan gengsi.</p>
+      <div class="feed-note">🤝 <span>Setiap catatanmu ikut mengisi target bersama di <b id="feed-count">2 komunitas</b>.</span></div>
     </section>
 
-    <!-- ================= QURAN ================= -->
+    <!-- Qur'an (sub halaman Tracker) -->
     <section class="screen" id="screen-quran">
+      <button class="back-link" onclick="goTo('tracker')">← Tracker</button>
       <h1 class="page-title">Bacaan Qur'an</h1>
-      <p class="page-sub">Waktu membaca dihitung otomatis saat Qur'an dibuka, minimal 1 menit sehari. Progres ini terpisah dari cincin Ilmi.</p>
-
+      <p class="page-sub">Waktu membaca dihitung otomatis saat Qur'an dibuka, minimal 1 menit sehari.</p>
       <div class="card">
         <div class="stat-row">
           <div>
-            <div class="stat-big" id="quran-big">0 <span style="font-size:16px; font-weight:500; color:var(--ink-soft);">menit</span></div>
-            <div class="stat-target" id="quran-target-label">Target harian: 1 menit</div>
-            <div class="stat-streak">Streak baca <b id="quran-streak">12 hari</b></div>
+            <div class="stat-big" id="quran-big">0 <span class="stat-unit">menit</span></div>
+            <div class="stat-target">Target harian: <span id="quran-target">1</span> menit</div>
           </div>
           <div class="check-circle empty" id="quran-check">📖</div>
         </div>
-        <button class="btn btn-ilmi btn-full" onclick="openQuranReader()">📖 Baca Al-Fatihah</button>
+        <button class="btn btn-gold btn-full" id="quran-open-btn" onclick="openQuranReader()">📖 Mulai Membaca</button>
       </div>
-
       <div class="card">
-        <div class="card-head">
-          <span class="card-title">Minggu ini</span>
-          <span class="card-tag">menit / hari</span>
+        <div class="card-head"><span class="card-title">Bacaan terakhir</span><span class="card-tag" id="quran-pages-today">0 halaman hari ini</span></div>
+        <div class="stat-row">
+          <div>
+            <div style="font-weight:600; font-size:15px;" id="quran-last">Al-Fatihah · Halaman 1</div>
+            <div class="stat-target">Mushaf Madinah 15 baris · Juz 1</div>
+          </div>
+          <div class="check-circle" style="background:var(--gold-soft); color:var(--gold); font-family:'Amiri Quran', serif; font-size:20px;" id="quran-last-ar">١</div>
         </div>
-        <div class="chart" id="quran-chart"></div>
+        <div class="credit" style="text-align:left;">Prototipe memuat 10 halaman pertama. Versi penuh memakai data yang sama untuk 604 halaman.</div>
       </div>
-
       <div class="card">
-        <div class="card-title" style="margin-bottom:4px;">Riwayat</div>
-        <div id="quran-history"></div>
+        <div class="card-head"><span class="card-title">Minggu ini</span><span class="card-tag">menit / hari</span></div>
+        <div class="chart" id="quran-chart"></div>
       </div>
     </section>
 
-    <!-- ================= GERAK ================= -->
+    <!-- Gerak (sub halaman Tracker) -->
     <section class="screen" id="screen-gerak">
+      <button class="back-link" onclick="goTo('tracker')">← Tracker</button>
       <h1 class="page-title">Gerak Hari Ini</h1>
       <p class="page-sub">Pilih jenis aktivitas, lalu mulai sesi. Waktu tercatat otomatis selama sesi berjalan.</p>
-
       <div class="card">
         <div class="stat-row">
           <div>
-            <div class="stat-big" id="gerak-big">0 <span style="font-size:16px; font-weight:500; color:var(--ink-soft);">menit</span></div>
-            <div class="stat-target" id="gerak-target-label">Target harian: 30 menit</div>
-            <div class="stat-streak">Streak gerak <b id="gerak-streak">12 hari</b></div>
+            <div class="stat-big" id="gerak-big">0 <span class="stat-unit">menit</span></div>
+            <div class="stat-target">Target harian: <span id="gerak-target">30</span> menit</div>
           </div>
           <div class="check-circle empty" id="gerak-check">🏃</div>
         </div>
-
         <div class="chip-row" style="margin-top:16px;" id="activity-chips">
           <button class="chip active" data-act="Jalan kaki">Jalan kaki</button>
           <button class="chip" data-act="Lari">Lari</button>
           <button class="chip" data-act="Olahraga rumah">Olahraga rumah</button>
           <button class="chip" data-act="Bersepeda">Bersepeda</button>
         </div>
-
         <button class="btn btn-jism btn-full" onclick="openGerakSession()">🏃 Mulai Sesi</button>
       </div>
-
       <div class="card">
-        <div class="card-head">
-          <span class="card-title">Minggu ini</span>
-          <span class="card-tag">menit / hari</span>
-        </div>
+        <div class="card-head"><span class="card-title">Minggu ini</span><span class="card-tag">menit / hari</span></div>
         <div class="chart" id="gerak-chart"></div>
-      </div>
-
-      <div class="card">
-        <div class="card-title" style="margin-bottom:4px;">Riwayat</div>
-        <div id="gerak-history"></div>
       </div>
     </section>
 
-    <!-- ================= BELAJAR ================= -->
+    <!-- Belajar (sub halaman Tracker) -->
     <section class="screen" id="screen-belajar">
+      <button class="back-link" onclick="goTo('tracker')">← Tracker</button>
       <h1 class="page-title">Belajar</h1>
       <p class="page-sub">Kisah singkat untuk menguatkan ilmu dan iman. Waktu membacanya mengisi cincin Ilmi.</p>
-
       <div class="chip-row" id="theme-chips">
         <button class="chip" data-theme="akidah">Akidah</button>
         <button class="chip" data-theme="fiqih">Fiqih</button>
         <button class="chip" data-theme="sirah">Sirah</button>
       </div>
-
-      <div class="card">
-        <div id="story-list"></div>
-      </div>
+      <div class="card"><div id="story-list"></div></div>
     </section>
 
     <!-- ================= EVENT ================= -->
     <section class="screen" id="screen-event">
       <h1 class="page-title">Event</h1>
-      <p class="page-sub">Momen berbasis waktu (seperti Ramadhan) dan event lokal di masjid sekitarmu.</p>
+      <p class="page-sub">Tantangan pribadi dan komunitas, serta kegiatan di masjid sekitarmu.</p>
 
-      <div class="chip-row" id="event-chips">
-        <button class="chip active-ilmi" data-filter="semua">Semua</button>
-        <button class="chip" data-filter="waktu">Berbasis Waktu</button>
-        <button class="chip" data-filter="lokasi">Berbasis Lokasi</button>
+      <div class="chip-row" id="event-tabs">
+        <button class="chip active-ilmi" data-etab="tantangan">Tantangan</button>
+        <button class="chip" data-etab="masjid">Event Masjid</button>
       </div>
 
-      <div class="card">
-        <div id="event-list"></div>
+      <div id="etab-tantangan">
+        <p class="section-label">Sedang diikuti</p>
+        <div class="card" style="margin-top:8px;"><div id="active-challenges"></div></div>
+
+
+        <p class="section-label">Tantangan tersedia</p>
+        <div class="card" style="margin-top:8px;"><div id="open-challenges"></div></div>
+      </div>
+
+      <div id="etab-masjid" style="display:none;">
+        <div class="chip-row" id="event-chips" style="margin-top:12px;">
+          <button class="chip active-ilmi" data-filter="semua">Semua</button>
+          <button class="chip" data-filter="waktu">Berbasis Waktu</button>
+          <button class="chip" data-filter="lokasi">Berbasis Lokasi</button>
+        </div>
+        <div class="card"><div id="event-list"></div></div>
       </div>
     </section>
 
-    <!-- ================= CIRCLE ================= -->
-    <section class="screen" id="screen-circle">
-      <h1 class="page-title">Circle</h1>
-      <p class="page-sub">Saling mengingatkan dalam kebaikan.</p>
-
-      <button class="btn btn-outline" style="width:100%; margin-bottom:6px;" onclick="inviteFriend()">➕ Undang teman ke Circle</button>
-
-      <div class="card" style="margin-top:14px;">
-        <div id="friend-list"></div>
+    <!-- ================= SAYA ================= -->
+    <section class="screen" id="screen-saya">
+      <div class="card" style="margin-top:12px;">
+        <div class="profile">
+          <div class="p-avatar">S</div>
+          <div>
+            <div class="p-name">Shulhan</div>
+            <div class="p-meta" id="p-meta">Anggota 2 komunitas</div>
+          </div>
+        </div>
       </div>
+
+      <div class="stat-grid">
+        <div class="stat-tile"><div class="v" id="st-streak">12</div><div class="l">hari beruntun</div></div>
+        <div class="stat-tile"><div class="v" id="st-quran">0</div><div class="l">menit Qur'an pekan ini</div></div>
+        <div class="stat-tile"><div class="v" id="st-gerak">0</div><div class="l">menit gerak pekan ini</div></div>
+        <div class="stat-tile"><div class="v" id="st-kisah">0</div><div class="l">kisah dibaca</div></div>
+      </div>
+      <div class="private-note">🔒 <span>Statistik ini hanya terlihat olehmu.</span></div>
+
+      <p class="section-label">Lencana</p>
+      <div class="card" style="margin-top:8px;"><div class="badge-grid" id="badge-grid"></div></div>
+
+      <p class="section-label">Riwayat tantangan dan event</p>
+      <div class="card" style="margin-top:8px;"><div id="history-list"></div></div>
     </section>
 
   </main>
 
   <nav class="tabbar">
-    <button class="tab-btn active" data-tab="home" onclick="goTo('home')"><span class="tab-icon">🏠</span>Beranda</button>
-    <button class="tab-btn" data-tab="quran" onclick="goTo('quran')"><span class="tab-icon">📖</span>Qur'an</button>
-    <button class="tab-btn" data-tab="gerak" onclick="goTo('gerak')"><span class="tab-icon">🏃</span>Gerak</button>
-    <button class="tab-btn" data-tab="belajar" onclick="goTo('belajar')"><span class="tab-icon">📚</span>Belajar</button>
-    <button class="tab-btn" data-tab="event" onclick="goTo('event')"><span class="tab-icon">📅</span>Event</button>
-    <button class="tab-btn" data-tab="circle" onclick="goTo('circle')"><span class="tab-icon">👥</span>Circle</button>
+    <button class="tab-btn active" data-tab="komunitas" onclick="goTo('komunitas')"><span class="tab-icon">🤝</span>Komunitas</button>
+    <button class="tab-btn" data-tab="peta" onclick="goTo('peta')"><span class="tab-icon">🗺️</span>Peta</button>
+    <button class="tab-btn center" data-tab="tracker" onclick="goTo('tracker')"><span class="tab-icon">＋</span>Tracker</button>
+    <button class="tab-btn" data-tab="event" onclick="goTo('event')"><span class="tab-icon">🏆</span>Event</button>
+    <button class="tab-btn" data-tab="saya" onclick="goTo('saya')"><span class="tab-icon">👤</span>Saya</button>
   </nav>
 
-  <div class="toast" id="toast"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <!-- ============ QURAN READER OVERLAY ============ -->
+  <!-- ============ QURAN READER ============ -->
   <div class="overlay" id="overlay-quran">
     <div class="overlay-header">
       <button class="overlay-back" onclick="closeQuranReader()">←</button>
       <span class="overlay-timer">🕊️ Sedang berlangsung</span>
     </div>
     <div class="overlay-body">
-      <div class="overlay-title">Al-Fatihah</div>
-      <div class="overlay-tag">Pembukaan · 7 ayat</div>
-      <div id="ayat-list"></div>
+      <div class="mushaf-page" id="mushaf-page"></div>
+      <div class="credit">Teks dan tata letak halaman: <a href="https://github.com/quran-ws/quran-text" target="_blank" rel="noopener">quran-text</a> (CC BY 4.0) · Huruf: Amiri Quran (SIL OFL)</div>
     </div>
     <div class="overlay-footer">
-      <button class="btn btn-ilmi btn-full" style="margin-top:0;" onclick="closeQuranReader()">Selesai Membaca</button>
+      <div class="reader-nav">
+        <button class="btn btn-outline" id="mushaf-next" onclick="mushafStep(1)">‹ Lanjut</button>
+        <span class="page-ind" id="mushaf-ind">Hal. 1 / 10</span>
+        <button class="btn btn-outline" id="mushaf-prev" onclick="mushafStep(-1)">Kembali ›</button>
+      </div>
+      <button class="btn btn-gold btn-full" style="margin-top:0;" onclick="closeQuranReader()">Selesai Membaca</button>
     </div>
   </div>
 
-  <!-- ============ GERAK SESSION OVERLAY ============ -->
+  <!-- ============ GERAK SESSION ============ -->
   <div class="overlay" id="overlay-gerak">
     <div class="overlay-header">
       <button class="overlay-back" onclick="closeGerakSession()">←</button>
@@ -418,7 +562,7 @@
     </div>
   </div>
 
-  <!-- ============ STORY READER OVERLAY ============ -->
+  <!-- ============ STORY READER ============ -->
   <div class="overlay" id="overlay-story">
     <div class="overlay-header">
       <button class="overlay-back" onclick="closeStoryReader()">←</button>
@@ -430,86 +574,113 @@
     </div>
   </div>
 
-  <!-- ============ ACHIEVEMENTS OVERLAY ============ -->
-  <div class="overlay" id="overlay-achieve">
-    <div class="overlay-header">
-      <button class="overlay-back" onclick="closeAchievements()">←</button>
-      <span></span>
-    </div>
-    <div class="overlay-body">
-      <div class="overlay-title">Lencana</div>
-      <div class="overlay-tag">Jejak istiqomahmu dalam ilmu dan raga.</div>
-      <div class="badge-grid" id="badge-grid"></div>
-    </div>
-  </div>
-
 </div>
 
 <script>
-  // ---------------- state ----------------
+  // ================= state =================
   const state = {
     streakDays: 12,
-    quranTargetMin: 1,
-    ilmiTargetMin: 1,
-    gerakTargetMin: 30,
-    quranSecondsToday: 0,
-    ilmiSecondsToday: 0,
-    gerakSecondsToday: 0,
+    quranTargetMin: 1, ilmiTargetMin: 1, gerakTargetMin: 30,
+    quranSecondsToday: 0, ilmiSecondsToday: 0, gerakSecondsToday: 0,
     quranWeek: [8,15,3,20,5,12,0],
     gerakWeek: [20,30,0,25,15,30,0],
-    quranHistory: [
-      {day:'Kemarin', val:'12 menit'},
-      {day:'2 hari lalu', val:'5 menit'},
-      {day:'3 hari lalu', val:'20 menit'},
-    ],
-    gerakHistory: [
-      {day:'Kemarin', val:'15 menit · Jalan kaki'},
-      {day:'2 hari lalu', val:'30 menit · Lari'},
-      {day:'3 hari lalu', val:'0 menit'},
-    ],
-    friends: [
-      {name:'Nadia', color:'#2E5257', quran:true, ilmi:true, gerak:true, nudged:false},
-      {name:'Ridho', color:'#B4592F', quran:true, ilmi:false, gerak:false, nudged:false},
-      {name:'Salma', color:'#8C6A2E', quran:false, ilmi:false, gerak:false, nudged:false},
-      {name:'Umar', color:'#5B7B6E', quran:false, ilmi:true, gerak:true, nudged:false},
-      {name:'Zaid', color:'#9C5B45', quran:true, ilmi:true, gerak:true, nudged:false},
-    ],
+    mushafPage: 1,
+    pagesReadToday: new Set(),
     activeChip: 'Jalan kaki',
     learnTheme: 'sirah',
     storiesRead: new Set(),
     openStoryId: null,
     invited: false,
+    nudgedAny: false,
+    activeCommunity: 'maskam',
+    placeFilter: 'semua',
+    selectedPlace: null,
+    eventTab: 'tantangan',
     eventFilter: 'semua',
     joinedEvents: new Set(),
+    history: [
+      {day:'Ramadhan 1447H', val:'Tantangan Tadarus Ramadhan ✓'},
+      {day:'Maret 2026', val:"I'tikaf 10 malam terakhir ✓"},
+    ],
   };
 
-  const days = ['Sen','Sel','Rab','Kam','Jum','Sab','Min'];
-  const RING_R_ILMI = 80, RING_R_JISM = 58;
-  const CIRC_ILMI = 2*Math.PI*RING_R_ILMI, CIRC_JISM = 2*Math.PI*RING_R_JISM;
-  const activityIcons = {'Jalan kaki':'🚶','Lari':'🏃','Olahraga rumah':'🏋️','Bersepeda':'🚴'};
-
-  function initials(name){ return name.trim().charAt(0).toUpperCase(); }
-  function formatTime(sec){ const m=Math.floor(sec/60), s=sec%60; return `${m}:${s.toString().padStart(2,'0')}`; }
-  function quranMinutesToday(){ return Math.floor(state.quranSecondsToday/60); }
-  function ilmiMinutesToday(){ return Math.floor(state.ilmiSecondsToday/60); }
-  function gerakMinutesToday(){ return Math.floor(state.gerakSecondsToday/60); }
-
-  // ---------------- Al-Fatihah content ----------------
-  const fatihah = [
-    {ar:'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ', tr:'Dengan nama Allah Yang Maha Pengasih, Maha Penyayang.'},
-    {ar:'الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ', tr:'Segala puji bagi Allah, Tuhan seluruh alam.'},
-    {ar:'الرَّحْمَٰنِ الرَّحِيمِ', tr:'Yang Maha Pengasih, Maha Penyayang.'},
-    {ar:'مَالِكِ يَوْمِ الدِّينِ', tr:'Yang menguasai hari pembalasan.'},
-    {ar:'إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ', tr:'Hanya kepada-Mu kami menyembah, dan hanya kepada-Mu kami memohon pertolongan.'},
-    {ar:'اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ', tr:'Tunjukilah kami jalan yang lurus.'},
-    {ar:'صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ', tr:'Jalan orang-orang yang Engkau beri nikmat, bukan jalan mereka yang dimurkai dan bukan pula jalan mereka yang tersesat.'},
+  const communities = [
+    {
+      id:'maskam', name:'Mentoring Masjid Kampus', type:'Grup mentoring', icon:'🤝',
+      members:[
+        {name:'Hamzah', color:'#2E5257', done:true},
+        {name:'Ridho', color:'#B4592F', done:false},
+        {name:'Bilal', color:'#8C6A2E', done:false},
+        {name:'Umar',  color:'#5B7B6E', done:true},
+        {name:'Zaid',  color:'#9C5B45', done:true},
+      ],
+      goals:[
+        {kind:'quran', label:'Tadarus bersama pekan ini', cur:412, target:600},
+        {kind:'gerak', label:'Gerak jamaah pekan ini', cur:1240, target:2000},
+      ],
+      next:{icon:'📿', title:'Halaqah pekanan', when:'Kamis, 19.30 · Masjid Salman ITB'},
+    },
+    {
+      id:'alikhlas', name:'Jamaah Masjid Al-Ikhlas', type:'Komunitas masjid', icon:'🕌',
+      members:[
+        {name:'Pak Hasan', color:'#5B7B6E', done:true},
+        {name:'Fikri', color:'#2E5257', done:false},
+        {name:'Aisyah', color:'#B4592F', done:true},
+        {name:'Bu Rina', color:'#8C6A2E', done:false},
+      ],
+      goals:[
+        {kind:'gerak', label:"Senam ba'da Subuh bulan ini", cur:2860, target:4000},
+        {kind:'quran', label:'Khatam bersama bulan ini', cur:355, target:900},
+      ],
+      next:{icon:'🌅', title:"Senam ba'da Subuh", when:'Besok, 05.15 · Halaman masjid'},
+    },
+    {
+      id:'keluarga', name:'Keluarga', type:'Keluarga', icon:'🏡',
+      members:[
+        {name:'Ummi', color:'#8C6A2E', done:true},
+        {name:'Abi', color:'#2E5257', done:false},
+        {name:'Hana', color:'#B4592F', done:true},
+      ],
+      goals:[
+        {kind:'quran', label:'Tilawah keluarga pekan ini', cur:96, target:210},
+        {kind:'gerak', label:'Jalan sore bersama', cur:140, target:300},
+      ],
+      next:{icon:'🍽️', title:'Kajian keluarga', when:'Ahad, ba\'da Maghrib · Rumah'},
+    },
   ];
 
-  // ---------------- stories content ----------------
+  const places = [
+    {id:'alikhlas', name:'Masjid Al-Ikhlas', kind:'masjid', dist:'0,4 km', x:40, y:62, acts:["Senam ba'da Subuh","Tahsin ba'da Maghrib"], members:86},
+    {id:'attaqwa', name:'Masjid At-Taqwa', kind:'masjid', dist:'0,9 km', x:24, y:34, acts:['Gym gratis untuk warga','Futsal remaja Sabtu'], members:142},
+    {id:'tahsin', name:'Tahsin Muslimah Kampus', kind:'komunitas', dist:'1,0 km', x:72, y:42, acts:['Tahsin pekanan, Rabu'], members:38},
+    {id:'salman', name:'Masjid Salman ITB', kind:'masjid', dist:'1,2 km', x:58, y:22, acts:['Kajian Subuh Ahad','SIM x Adiwidya 2026'], members:240},
+    {id:'ngajisoccer', name:'Ngaji Soccer Remaja', kind:'komunitas', dist:'1,6 km', x:16, y:82, acts:['Tadarus lalu mini soccer, Ahad sore'], members:54},
+    {id:'lari', name:'Lari Pagi Jamaah Muda', kind:'komunitas', dist:'2,1 km', x:82, y:76, acts:['Lari 5 km tiap Sabtu pagi'], members:67},
+  ];
+
+  const challenges = [
+    {id:'ch-khatam', title:'Khatam Bersama Mentoring', scope:'komunitas', icon:'🤝', desc:'Bagi 30 juz bersama anggota Mentoring Masjid Kampus bulan ini.', progress:18, total:30, unit:'juz', joined:true},
+    {id:'ch-subuh', title:"7 Hari Gerak Ba'da Subuh", scope:'pribadi', icon:'🌅', desc:"Gerak minimal 10 menit setelah Subuh selama 7 hari.", progress:0, total:7, unit:'hari', joined:false},
+    {id:'ch-tadarus', title:'Tadarus 10 Menit Sehari', scope:'pribadi', icon:'📖', desc:"Baca Qur'an minimal 10 menit setiap hari selama sepekan.", progress:0, total:7, unit:'hari', joined:false},
+    {id:'ch-km', title:'100 km Jamaah Al-Ikhlas', scope:'komunitas', icon:'🏃', desc:'Kumpulkan 100 km lari dan jalan bersama jamaah bulan ini.', progress:0, total:100, unit:'km', joined:false},
+  ];
+
+  const events = [
+    {id:'ramadhan-tadarus', type:'waktu', icon:'🌙', title:'Tantangan Tadarus Ramadhan', tag:'Berbasis Waktu · Ramadhan 1448H', desc:"Khatam bersama komunitasmu selama sebulan penuh. Progres terhitung dari waktu baca Qur'an harianmu."},
+    {id:'dzulhijjah-amal', type:'waktu', icon:'🐐', title:'Sepekan Amal Dzulhijjah', tag:'Berbasis Waktu · 1 sampai 10 Dzulhijjah', desc:'Perbanyak dzikir dan sedekah di sepuluh hari terbaik dalam setahun. Aktif otomatis saat tanggalnya tiba.'},
+    {id:'sim-adiwidya', type:'lokasi', icon:'🏛️', title:'SIM x Adiwidya 2026', tag:'Berbasis Lokasi · 1,2 km · 8 Nov 2026', desc:'Simposium ilmiah dan expo teknologi kewirausahaan berbasis nilai Islam di Masjid Salman ITB, Bandung.'},
+    {id:'kajian-subuh', type:'lokasi', icon:'📿', title:'Kajian Subuh: Tafsir Al-Baqarah', tag:'Berbasis Lokasi · 1,2 km · Tiap Ahad', desc:"Kajian rutin ba'da Subuh, membahas tafsir surat Al-Baqarah, termasuk kisah Thalut."},
+    {id:'gym-attaqwa', type:'lokasi', icon:'🏋️', title:'Gym Gratis Masjid At-Taqwa', tag:'Berbasis Lokasi · 0,9 km · Setiap hari', desc:'Fasilitas olahraga gratis untuk warga. Catat sesimu lewat Tracker agar ikut mengisi target komunitas.'},
+    {id:'lari-jamaah', type:'lokasi', icon:'🏃', title:'Lari Pagi Jamaah Muda', tag:'Berbasis Lokasi · 2,1 km · Sabtu pagi', desc:'Olahraga bareng jamaah sekitar. Catat waktumu di Tracker setelah selesai.'},
+  ];
+
+  // 10 halaman pertama Mushaf Madinah (15 baris), dari dataset quran-text (CC BY 4.0)
+  const mushafPages = [{"page":1,"surah":"Al-Fatihah","surahAr":"الفاتحة","juz":1,"lines":["بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ ۝١","ٱلۡحَمۡدُ لِلَّهِ رَبِّ ٱلۡعَٰلَمِينَ ۝٢","ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ ۝٣ مَٰلِكِ يَوۡمِ ٱلدِّينِ ۝٤","إِيَّاكَ نَعۡبُدُ وَإِيَّاكَ نَسۡتَعِينُ ۝٥ ٱهۡدِنَا","ٱلصِّرَٰطَ ٱلۡمُسۡتَقِيمَ ۝٦ صِرَٰطَ ٱلَّذِينَ أَنۡعَمۡتَ","عَلَيۡهِمۡ غَيۡرِ ٱلۡمَغۡضُوبِ عَلَيۡهِمۡ","وَلَا ٱلضَّآلِّينَ ۝٧"],"banner":"سُورَةُ الفَاتِحَة","center":true},{"page":2,"surah":"Al-Baqarah","surahAr":"البقرة","juz":1,"lines":["الٓمٓ ۝١ ذَٰلِكَ ٱلۡكِتَٰبُ لَا رَيۡبَۛ فِيهِۛ هُدࣰى","لِّلۡمُتَّقِينَ ۝٢ ٱلَّذِينَ يُؤۡمِنُونَ بِٱلۡغَيۡبِ وَيُقِيمُونَ ٱلصَّلَوٰةَ","وَمِمَّا رَزَقۡنَٰهُمۡ يُنفِقُونَ ۝٣ وَٱلَّذِينَ يُؤۡمِنُونَ بِمَآ أُنزِلَ","إِلَيۡكَ وَمَآ أُنزِلَ مِن قَبۡلِكَ وَبِٱلۡأٓخِرَةِ هُمۡ يُوقِنُونَ ۝٤","أُوْلَٰٓئِكَ عَلَىٰ هُدࣰى مِّن رَّبِّهِمۡۖ وَأُوْلَٰٓئِكَ","هُمُ ٱلۡمُفۡلِحُونَ ۝٥"],"banner":"سُورَةُ البَقَرَة","basmalah":"بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ","center":true},{"page":3,"surah":"Al-Baqarah","surahAr":"البقرة","juz":1,"lines":["إِنَّ ٱلَّذِينَ كَفَرُواْ سَوَآءٌ عَلَيۡهِمۡ ءَأَنذَرۡتَهُمۡ أَمۡ لَمۡ تُنذِرۡهُمۡ","لَا يُؤۡمِنُونَ ۝٦ خَتَمَ ٱللَّهُ عَلَىٰ قُلُوبِهِمۡ وَعَلَىٰ سَمۡعِهِمۡۖ وَعَلَىٰٓ","أَبۡصَٰرِهِمۡ غِشَٰوَةࣱۖ وَلَهُمۡ عَذَابٌ عَظِيمࣱ ۝٧ وَمِنَ ٱلنَّاسِ","مَن يَقُولُ ءَامَنَّا بِٱللَّهِ وَبِٱلۡيَوۡمِ ٱلۡأٓخِرِ وَمَا هُم بِمُؤۡمِنِينَ ۝٨","يُخَٰدِعُونَ ٱللَّهَ وَٱلَّذِينَ ءَامَنُواْ وَمَا يَخۡدَعُونَ إِلَّآ أَنفُسَهُمۡ","وَمَا يَشۡعُرُونَ ۝٩ فِي قُلُوبِهِم مَّرَضࣱ فَزَادَهُمُ ٱللَّهُ مَرَضࣰاۖ","وَلَهُمۡ عَذَابٌ أَلِيمُۢ بِمَا كَانُواْ يَكۡذِبُونَ ۝١٠ وَإِذَا قِيلَ لَهُمۡ","لَا تُفۡسِدُواْ فِي ٱلۡأَرۡضِ قَالُوٓاْ إِنَّمَا نَحۡنُ مُصۡلِحُونَ ۝١١ أَلَآ إِنَّهُمۡ","هُمُ ٱلۡمُفۡسِدُونَ وَلَٰكِن لَّا يَشۡعُرُونَ ۝١٢ وَإِذَا قِيلَ لَهُمۡ","ءَامِنُواْ كَمَآ ءَامَنَ ٱلنَّاسُ قَالُوٓاْ أَنُؤۡمِنُ كَمَآ ءَامَنَ ٱلسُّفَهَآءُۗ","أَلَآ إِنَّهُمۡ هُمُ ٱلسُّفَهَآءُ وَلَٰكِن لَّا يَعۡلَمُونَ ۝١٣ وَإِذَا لَقُواْ","ٱلَّذِينَ ءَامَنُواْ قَالُوٓاْ ءَامَنَّا وَإِذَا خَلَوۡاْ إِلَىٰ شَيَٰطِينِهِمۡ قَالُوٓاْ إِنَّا","مَعَكُمۡ إِنَّمَا نَحۡنُ مُسۡتَهۡزِءُونَ ۝١٤ ٱللَّهُ يَسۡتَهۡزِئُ بِهِمۡ وَيَمُدُّهُمۡ","فِي طُغۡيَٰنِهِمۡ يَعۡمَهُونَ ۝١٥ أُوْلَٰٓئِكَ ٱلَّذِينَ ٱشۡتَرَوُاْ ٱلضَّلَٰلَةَ","بِٱلۡهُدَىٰ فَمَا رَبِحَت تِّجَٰرَتُهُمۡ وَمَا كَانُواْ مُهۡتَدِينَ ۝١٦"]},{"page":4,"surah":"Al-Baqarah","surahAr":"البقرة","juz":1,"lines":["مَثَلُهُمۡ كَمَثَلِ ٱلَّذِي ٱسۡتَوۡقَدَ نَارࣰا فَلَمَّآ أَضَآءَتۡ مَا حَوۡلَهُۥ","ذَهَبَ ٱللَّهُ بِنُورِهِمۡ وَتَرَكَهُمۡ فِي ظُلُمَٰتࣲ لَّا يُبۡصِرُونَ ۝١٧ صُمُّۢ","بُكۡمٌ عُمۡيࣱ فَهُمۡ لَا يَرۡجِعُونَ ۝١٨ أَوۡ كَصَيِّبࣲ مِّنَ ٱلسَّمَآءِ فِيهِ","ظُلُمَٰتࣱ وَرَعۡدࣱ وَبَرۡقࣱ يَجۡعَلُونَ أَصَٰبِعَهُمۡ فِيٓ ءَاذَانِهِم مِّنَ","ٱلصَّوَٰعِقِ حَذَرَ ٱلۡمَوۡتِۚ وَٱللَّهُ مُحِيطُۢ بِٱلۡكَٰفِرِينَ ۝١٩ يَكَادُ ٱلۡبَرۡقُ","يَخۡطَفُ أَبۡصَٰرَهُمۡۖ كُلَّمَآ أَضَآءَ لَهُم مَّشَوۡاْ فِيهِ وَإِذَآ أَظۡلَمَ عَلَيۡهِمۡ","قَامُواْۚ وَلَوۡ شَآءَ ٱللَّهُ لَذَهَبَ بِسَمۡعِهِمۡ وَأَبۡصَٰرِهِمۡۚ إِنَّ ٱللَّهَ عَلَىٰ","كُلِّ شَيۡءࣲ قَدِيرࣱ ۝٢٠ يَٰٓأَيُّهَا ٱلنَّاسُ ٱعۡبُدُواْ رَبَّكُمُ ٱلَّذِي","خَلَقَكُمۡ وَٱلَّذِينَ مِن قَبۡلِكُمۡ لَعَلَّكُمۡ تَتَّقُونَ ۝٢١ ٱلَّذِي جَعَلَ لَكُمُ","ٱلۡأَرۡضَ فِرَٰشࣰا وَٱلسَّمَآءَ بِنَآءࣰ وَأَنزَلَ مِنَ ٱلسَّمَآءِ مَآءࣰ فَأَخۡرَجَ","بِهِۦ مِنَ ٱلثَّمَرَٰتِ رِزۡقࣰا لَّكُمۡۖ فَلَا تَجۡعَلُواْ لِلَّهِ أَندَادࣰا وَأَنتُمۡ","تَعۡلَمُونَ ۝٢٢ وَإِن كُنتُمۡ فِي رَيۡبࣲ مِّمَّا نَزَّلۡنَا عَلَىٰ عَبۡدِنَا فَأۡتُواْ","بِسُورَةࣲ مِّن مِّثۡلِهِۦ وَٱدۡعُواْ شُهَدَآءَكُم مِّن دُونِ ٱللَّهِ إِن","كُنتُمۡ صَٰدِقِينَ ۝٢٣ فَإِن لَّمۡ تَفۡعَلُواْ وَلَن تَفۡعَلُواْ فَٱتَّقُواْ ٱلنَّارَ","ٱلَّتِي وَقُودُهَا ٱلنَّاسُ وَٱلۡحِجَارَةُۖ أُعِدَّتۡ لِلۡكَٰفِرِينَ ۝٢٤"]},{"page":5,"surah":"Al-Baqarah","surahAr":"البقرة","juz":1,"lines":["وَبَشِّرِ ٱلَّذِينَ ءَامَنُواْ وَعَمِلُواْ ٱلصَّٰلِحَٰتِ أَنَّ لَهُمۡ جَنَّٰتࣲ","تَجۡرِي مِن تَحۡتِهَا ٱلۡأَنۡهَٰرُۖ كُلَّمَا رُزِقُواْ مِنۡهَا مِن ثَمَرَةࣲ","رِّزۡقࣰا قَالُواْ هَٰذَا ٱلَّذِي رُزِقۡنَا مِن قَبۡلُۖ وَأُتُواْ بِهِۦ مُتَشَٰبِهࣰاۖ","وَلَهُمۡ فِيهَآ أَزۡوَٰجࣱ مُّطَهَّرَةࣱۖ وَهُمۡ فِيهَا خَٰلِدُونَ ۝٢٥ ۞ إِنَّ","ٱللَّهَ لَا يَسۡتَحۡيِۦٓ أَن يَضۡرِبَ مَثَلࣰا مَّا بَعُوضَةࣰ فَمَا فَوۡقَهَاۚ فَأَمَّا","ٱلَّذِينَ ءَامَنُواْ فَيَعۡلَمُونَ أَنَّهُ ٱلۡحَقُّ مِن رَّبِّهِمۡۖ وَأَمَّا","ٱلَّذِينَ كَفَرُواْ فَيَقُولُونَ مَاذَآ أَرَادَ ٱللَّهُ بِهَٰذَا مَثَلࣰاۘ","يُضِلُّ بِهِۦ كَثِيرࣰا وَيَهۡدِي بِهِۦ كَثِيرࣰاۚ وَمَا يُضِلُّ بِهِۦٓ","إِلَّا ٱلۡفَٰسِقِينَ ۝٢٦ ٱلَّذِينَ يَنقُضُونَ عَهۡدَ ٱللَّهِ مِنۢ بَعۡدِ","مِيثَٰقِهِۦ وَيَقۡطَعُونَ مَآ أَمَرَ ٱللَّهُ بِهِۦٓ أَن يُوصَلَ وَيُفۡسِدُونَ","فِي ٱلۡأَرۡضِۚ أُوْلَٰٓئِكَ هُمُ ٱلۡخَٰسِرُونَ ۝٢٧ كَيۡفَ","تَكۡفُرُونَ بِٱللَّهِ وَكُنتُمۡ أَمۡوَٰتࣰا فَأَحۡيَٰكُمۡۖ ثُمَّ يُمِيتُكُمۡ","ثُمَّ يُحۡيِيكُمۡ ثُمَّ إِلَيۡهِ تُرۡجَعُونَ ۝٢٨ هُوَ ٱلَّذِي خَلَقَ","لَكُم مَّا فِي ٱلۡأَرۡضِ جَمِيعࣰا ثُمَّ ٱسۡتَوَىٰٓ إِلَى ٱلسَّمَآءِ","فَسَوَّىٰهُنَّ سَبۡعَ سَمَٰوَٰتࣲۚ وَهُوَ بِكُلِّ شَيۡءٍ عَلِيمࣱ ۝٢٩"]},{"page":6,"surah":"Al-Baqarah","surahAr":"البقرة","juz":1,"lines":["وَإِذۡ قَالَ رَبُّكَ لِلۡمَلَٰٓئِكَةِ إِنِّي جَاعِلࣱ فِي ٱلۡأَرۡضِ خَلِيفَةࣰۖ قَالُوٓاْ","أَتَجۡعَلُ فِيهَا مَن يُفۡسِدُ فِيهَا وَيَسۡفِكُ ٱلدِّمَآءَ وَنَحۡنُ نُسَبِّحُ","بِحَمۡدِكَ وَنُقَدِّسُ لَكَۖ قَالَ إِنِّيٓ أَعۡلَمُ مَا لَا تَعۡلَمُونَ ۝٣٠ وَعَلَّمَ","ءَادَمَ ٱلۡأَسۡمَآءَ كُلَّهَا ثُمَّ عَرَضَهُمۡ عَلَى ٱلۡمَلَٰٓئِكَةِ فَقَالَ","أَنۢبِـُٔونِي بِأَسۡمَآءِ هَٰٓؤُلَآءِ إِن كُنتُمۡ صَٰدِقِينَ ۝٣١ قَالُواْ سُبۡحَٰنَكَ","لَا عِلۡمَ لَنَآ إِلَّا مَا عَلَّمۡتَنَآۖ إِنَّكَ أَنتَ ٱلۡعَلِيمُ ٱلۡحَكِيمُ ۝٣٢ قَالَ يَٰٓـَٔادَمُ","أَنۢبِئۡهُم بِأَسۡمَآئِهِمۡۖ فَلَمَّآ أَنۢبَأَهُم بِأَسۡمَآئِهِمۡ قَالَ أَلَمۡ أَقُل","لَّكُمۡ إِنِّيٓ أَعۡلَمُ غَيۡبَ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضِ وَأَعۡلَمُ مَا تُبۡدُونَ","وَمَا كُنتُمۡ تَكۡتُمُونَ ۝٣٣ وَإِذۡ قُلۡنَا لِلۡمَلَٰٓئِكَةِ ٱسۡجُدُواْ لِأٓدَمَ","فَسَجَدُوٓاْ إِلَّآ إِبۡلِيسَ أَبَىٰ وَٱسۡتَكۡبَرَ وَكَانَ مِنَ ٱلۡكَٰفِرِينَ ۝٣٤ وَقُلۡنَا","يَٰٓـَٔادَمُ ٱسۡكُنۡ أَنتَ وَزَوۡجُكَ ٱلۡجَنَّةَ وَكُلَا مِنۡهَا رَغَدًا حَيۡثُ","شِئۡتُمَا وَلَا تَقۡرَبَا هَٰذِهِ ٱلشَّجَرَةَ فَتَكُونَا مِنَ ٱلظَّٰلِمِينَ ۝٣٥ فَأَزَلَّهُمَا","ٱلشَّيۡطَٰنُ عَنۡهَا فَأَخۡرَجَهُمَا مِمَّا كَانَا فِيهِۖ وَقُلۡنَا ٱهۡبِطُواْ بَعۡضُكُمۡ","لِبَعۡضٍ عَدُوࣱّۖ وَلَكُمۡ فِي ٱلۡأَرۡضِ مُسۡتَقَرࣱّ وَمَتَٰعٌ إِلَىٰ حِينࣲ ۝٣٦ فَتَلَقَّىٰٓ","ءَادَمُ مِن رَّبِّهِۦ كَلِمَٰتࣲ فَتَابَ عَلَيۡهِۚ إِنَّهُۥ هُوَ ٱلتَّوَّابُ ٱلرَّحِيمُ ۝٣٧"]},{"page":7,"surah":"Al-Baqarah","surahAr":"البقرة","juz":1,"lines":["قُلۡنَا ٱهۡبِطُواْ مِنۡهَا جَمِيعࣰاۖ فَإِمَّا يَأۡتِيَنَّكُم مِّنِّي هُدࣰى فَمَن تَبِعَ","هُدَايَ فَلَا خَوۡفٌ عَلَيۡهِمۡ وَلَا هُمۡ يَحۡزَنُونَ ۝٣٨ وَٱلَّذِينَ كَفَرُواْ","وَكَذَّبُواْ بِـَٔايَٰتِنَآ أُوْلَٰٓئِكَ أَصۡحَٰبُ ٱلنَّارِۖ هُمۡ فِيهَا خَٰلِدُونَ ۝٣٩","يَٰبَنِيٓ إِسۡرَٰٓءِيلَ ٱذۡكُرُواْ نِعۡمَتِيَ ٱلَّتِيٓ أَنۡعَمۡتُ عَلَيۡكُمۡ وَأَوۡفُواْ بِعَهۡدِيٓ","أُوفِ بِعَهۡدِكُمۡ وَإِيَّٰيَ فَٱرۡهَبُونِ ۝٤٠ وَءَامِنُواْ بِمَآ أَنزَلۡتُ مُصَدِّقࣰا","لِّمَا مَعَكُمۡ وَلَا تَكُونُوٓاْ أَوَّلَ كَافِرِۭ بِهِۦۖ وَلَا تَشۡتَرُواْ بِـَٔايَٰتِي","ثَمَنࣰا قَلِيلࣰا وَإِيَّٰيَ فَٱتَّقُونِ ۝٤١ وَلَا تَلۡبِسُواْ ٱلۡحَقَّ بِٱلۡبَٰطِلِ وَتَكۡتُمُواْ","ٱلۡحَقَّ وَأَنتُمۡ تَعۡلَمُونَ ۝٤٢ وَأَقِيمُواْ ٱلصَّلَوٰةَ وَءَاتُواْ ٱلزَّكَوٰةَ","وَٱرۡكَعُواْ مَعَ ٱلرَّٰكِعِينَ ۝٤٣ ۞ أَتَأۡمُرُونَ ٱلنَّاسَ بِٱلۡبِرِّ","وَتَنسَوۡنَ أَنفُسَكُمۡ وَأَنتُمۡ تَتۡلُونَ ٱلۡكِتَٰبَۚ أَفَلَا تَعۡقِلُونَ ۝٤٤","وَٱسۡتَعِينُواْ بِٱلصَّبۡرِ وَٱلصَّلَوٰةِۚ وَإِنَّهَا لَكَبِيرَةٌ إِلَّا عَلَى ٱلۡخَٰشِعِينَ ۝٤٥","ٱلَّذِينَ يَظُنُّونَ أَنَّهُم مُّلَٰقُواْ رَبِّهِمۡ وَأَنَّهُمۡ إِلَيۡهِ رَٰجِعُونَ ۝٤٦","يَٰبَنِيٓ إِسۡرَٰٓءِيلَ ٱذۡكُرُواْ نِعۡمَتِيَ ٱلَّتِيٓ أَنۡعَمۡتُ عَلَيۡكُمۡ وَأَنِّي فَضَّلۡتُكُمۡ","عَلَى ٱلۡعَٰلَمِينَ ۝٤٧ وَٱتَّقُواْ يَوۡمࣰا لَّا تَجۡزِي نَفۡسٌ عَن نَّفۡسࣲ شَيۡـࣰٔا","وَلَا يُقۡبَلُ مِنۡهَا شَفَٰعَةࣱ وَلَا يُؤۡخَذُ مِنۡهَا عَدۡلࣱ وَلَا هُمۡ يُنصَرُونَ ۝٤٨"]},{"page":8,"surah":"Al-Baqarah","surahAr":"البقرة","juz":1,"lines":["وَإِذۡ نَجَّيۡنَٰكُم مِّنۡ ءَالِ فِرۡعَوۡنَ يَسُومُونَكُمۡ سُوٓءَ ٱلۡعَذَابِ","يُذَبِّحُونَ أَبۡنَآءَكُمۡ وَيَسۡتَحۡيُونَ نِسَآءَكُمۡۚ وَفِي ذَٰلِكُم بَلَآءࣱ","مِّن رَّبِّكُمۡ عَظِيمࣱ ۝٤٩ وَإِذۡ فَرَقۡنَا بِكُمُ ٱلۡبَحۡرَ فَأَنجَيۡنَٰكُمۡ","وَأَغۡرَقۡنَآ ءَالَ فِرۡعَوۡنَ وَأَنتُمۡ تَنظُرُونَ ۝٥٠ وَإِذۡ وَٰعَدۡنَا مُوسَىٰٓ","أَرۡبَعِينَ لَيۡلَةࣰ ثُمَّ ٱتَّخَذۡتُمُ ٱلۡعِجۡلَ مِنۢ بَعۡدِهِۦ وَأَنتُمۡ ظَٰلِمُونَ ۝٥١","ثُمَّ عَفَوۡنَا عَنكُم مِّنۢ بَعۡدِ ذَٰلِكَ لَعَلَّكُمۡ تَشۡكُرُونَ ۝٥٢","وَإِذۡ ءَاتَيۡنَا مُوسَى ٱلۡكِتَٰبَ وَٱلۡفُرۡقَانَ لَعَلَّكُمۡ تَهۡتَدُونَ ۝٥٣","وَإِذۡ قَالَ مُوسَىٰ لِقَوۡمِهِۦ يَٰقَوۡمِ إِنَّكُمۡ ظَلَمۡتُمۡ أَنفُسَكُم بِٱتِّخَاذِكُمُ","ٱلۡعِجۡلَ فَتُوبُوٓاْ إِلَىٰ بَارِئِكُمۡ فَٱقۡتُلُوٓاْ أَنفُسَكُمۡ ذَٰلِكُمۡ","خَيۡرࣱ لَّكُمۡ عِندَ بَارِئِكُمۡ فَتَابَ عَلَيۡكُمۡۚ إِنَّهُۥ هُوَ ٱلتَّوَّابُ","ٱلرَّحِيمُ ۝٥٤ وَإِذۡ قُلۡتُمۡ يَٰمُوسَىٰ لَن نُّؤۡمِنَ لَكَ حَتَّىٰ نَرَى ٱللَّهَ","جَهۡرَةࣰ فَأَخَذَتۡكُمُ ٱلصَّٰعِقَةُ وَأَنتُمۡ تَنظُرُونَ ۝٥٥ ثُمَّ بَعَثۡنَٰكُم","مِّنۢ بَعۡدِ مَوۡتِكُمۡ لَعَلَّكُمۡ تَشۡكُرُونَ ۝٥٦ وَظَلَّلۡنَا عَلَيۡكُمُ","ٱلۡغَمَامَ وَأَنزَلۡنَا عَلَيۡكُمُ ٱلۡمَنَّ وَٱلسَّلۡوَىٰۖ كُلُواْ مِن طَيِّبَٰتِ","مَا رَزَقۡنَٰكُمۡۚ وَمَا ظَلَمُونَا وَلَٰكِن كَانُوٓاْ أَنفُسَهُمۡ يَظۡلِمُونَ ۝٥٧"]},{"page":9,"surah":"Al-Baqarah","surahAr":"البقرة","juz":1,"lines":["وَإِذۡ قُلۡنَا ٱدۡخُلُواْ هَٰذِهِ ٱلۡقَرۡيَةَ فَكُلُواْ مِنۡهَا حَيۡثُ شِئۡتُمۡ","رَغَدࣰا وَٱدۡخُلُواْ ٱلۡبَابَ سُجَّدࣰا وَقُولُواْ حِطَّةࣱ نَّغۡفِرۡ لَكُمۡ","خَطَٰيَٰكُمۡۚ وَسَنَزِيدُ ٱلۡمُحۡسِنِينَ ۝٥٨ فَبَدَّلَ ٱلَّذِينَ","ظَلَمُواْ قَوۡلًا غَيۡرَ ٱلَّذِي قِيلَ لَهُمۡ فَأَنزَلۡنَا عَلَى ٱلَّذِينَ ظَلَمُواْ","رِجۡزࣰا مِّنَ ٱلسَّمَآءِ بِمَا كَانُواْ يَفۡسُقُونَ ۝٥٩ ۞ وَإِذِ ٱسۡتَسۡقَىٰ","مُوسَىٰ لِقَوۡمِهِۦ فَقُلۡنَا ٱضۡرِب بِّعَصَاكَ ٱلۡحَجَرَۖ فَٱنفَجَرَتۡ","مِنۡهُ ٱثۡنَتَا عَشۡرَةَ عَيۡنࣰاۖ قَدۡ عَلِمَ كُلُّ أُنَاسࣲ مَّشۡرَبَهُمۡۖ كُلُواْ","وَٱشۡرَبُواْ مِن رِّزۡقِ ٱللَّهِ وَلَا تَعۡثَوۡاْ فِي ٱلۡأَرۡضِ مُفۡسِدِينَ ۝٦٠","وَإِذۡ قُلۡتُمۡ يَٰمُوسَىٰ لَن نَّصۡبِرَ عَلَىٰ طَعَامࣲ وَٰحِدࣲ فَٱدۡعُ لَنَا","رَبَّكَ يُخۡرِجۡ لَنَا مِمَّا تُنۢبِتُ ٱلۡأَرۡضُ مِنۢ بَقۡلِهَا وَقِثَّآئِهَا","وَفُومِهَا وَعَدَسِهَا وَبَصَلِهَاۖ قَالَ أَتَسۡتَبۡدِلُونَ ٱلَّذِي هُوَ","أَدۡنَىٰ بِٱلَّذِي هُوَ خَيۡرٌۚ ٱهۡبِطُواْ مِصۡرࣰا فَإِنَّ لَكُم مَّا سَأَلۡتُمۡۗ","وَضُرِبَتۡ عَلَيۡهِمُ ٱلذِّلَّةُ وَٱلۡمَسۡكَنَةُ وَبَآءُو بِغَضَبࣲ مِّنَ","ٱللَّهِۚ ذَٰلِكَ بِأَنَّهُمۡ كَانُواْ يَكۡفُرُونَ بِـَٔايَٰتِ ٱللَّهِ وَيَقۡتُلُونَ","ٱلنَّبِيِّـۧنَ بِغَيۡرِ ٱلۡحَقِّۚ ذَٰلِكَ بِمَا عَصَواْ وَّكَانُواْ يَعۡتَدُونَ ۝٦١"]},{"page":10,"surah":"Al-Baqarah","surahAr":"البقرة","juz":1,"lines":["إِنَّ ٱلَّذِينَ ءَامَنُواْ وَٱلَّذِينَ هَادُواْ وَٱلنَّصَٰرَىٰ وَٱلصَّٰبِـِٔينَ مَنۡ","ءَامَنَ بِٱللَّهِ وَٱلۡيَوۡمِ ٱلۡأٓخِرِ وَعَمِلَ صَٰلِحࣰا فَلَهُمۡ أَجۡرُهُمۡ عِندَ","رَبِّهِمۡ وَلَا خَوۡفٌ عَلَيۡهِمۡ وَلَا هُمۡ يَحۡزَنُونَ ۝٦٢ وَإِذۡ أَخَذۡنَا","مِيثَٰقَكُمۡ وَرَفَعۡنَا فَوۡقَكُمُ ٱلطُّورَ خُذُواْ مَآ ءَاتَيۡنَٰكُم","بِقُوَّةࣲ وَٱذۡكُرُواْ مَا فِيهِ لَعَلَّكُمۡ تَتَّقُونَ ۝٦٣ ثُمَّ تَوَلَّيۡتُم","مِّنۢ بَعۡدِ ذَٰلِكَۖ فَلَوۡلَا فَضۡلُ ٱللَّهِ عَلَيۡكُمۡ وَرَحۡمَتُهُۥ لَكُنتُم مِّنَ","ٱلۡخَٰسِرِينَ ۝٦٤ وَلَقَدۡ عَلِمۡتُمُ ٱلَّذِينَ ٱعۡتَدَوۡاْ مِنكُمۡ فِي ٱلسَّبۡتِ","فَقُلۡنَا لَهُمۡ كُونُواْ قِرَدَةً خَٰسِـِٔينَ ۝٦٥ فَجَعَلۡنَٰهَا نَكَٰلࣰا لِّمَا","بَيۡنَ يَدَيۡهَا وَمَا خَلۡفَهَا وَمَوۡعِظَةࣰ لِّلۡمُتَّقِينَ ۝٦٦ وَإِذۡ قَالَ","مُوسَىٰ لِقَوۡمِهِۦٓ إِنَّ ٱللَّهَ يَأۡمُرُكُمۡ أَن تَذۡبَحُواْ بَقَرَةࣰۖ قَالُوٓاْ","أَتَتَّخِذُنَا هُزُوࣰاۖ قَالَ أَعُوذُ بِٱللَّهِ أَنۡ أَكُونَ مِنَ ٱلۡجَٰهِلِينَ ۝٦٧","قَالُواْ ٱدۡعُ لَنَا رَبَّكَ يُبَيِّن لَّنَا مَا هِيَۚ قَالَ إِنَّهُۥ يَقُولُ إِنَّهَا","بَقَرَةࣱ لَّا فَارِضࣱ وَلَا بِكۡرٌ عَوَانُۢ بَيۡنَ ذَٰلِكَۖ فَٱفۡعَلُواْ مَا","تُؤۡمَرُونَ ۝٦٨ قَالُواْ ٱدۡعُ لَنَا رَبَّكَ يُبَيِّن لَّنَا مَا لَوۡنُهَاۚ قَالَ إِنَّهُۥ","يَقُولُ إِنَّهَا بَقَرَةࣱ صَفۡرَآءُ فَاقِعࣱ لَّوۡنُهَا تَسُرُّ ٱلنَّٰظِرِينَ ۝٦٩"]}];
+
   const stories = [
     {
       id:'sirah-talut', theme:'sirah', icon:'🛡️',
-      title:'Thalut — Luas Ilmu, Kuat Raga', tag:'Sirah · 4 menit baca',
+      title:'Thalut: Luas Ilmu, Kuat Raga', tag:'Sirah · 4 menit baca',
       teaser:'Mengapa seorang raja dipilih bukan karena hartanya, melainkan ilmu dan kekuatannya.',
       paragraphs:[
         'Setelah lama tanpa pemimpin, Bani Israil meminta nabi mereka untuk mengangkat seorang raja yang dapat menyatukan mereka berperang di jalan Allah.',
@@ -520,7 +691,7 @@
       paragraphs2:[
         'Sebelum berperang, Thalut menguji pasukannya di tepi sebuah sungai: siapa yang minum sepuasnya akan gugur dari barisan, hanya yang menahan diri dan cukup seteguk yang boleh melanjutkan. Ribuan orang gagal pada ujian kecil ini, dan hanya sedikit yang lulus.',
         'Pasukan kecil yang tersisa itu kemudian menghadapi Jalut (Goliath) dan bala tentaranya yang jauh lebih besar. Mereka yang yakin akan pertolongan Allah berkata, "Betapa banyak kelompok kecil yang mengalahkan kelompok besar dengan izin Allah."',
-        'Di barisan itu ada seorang pemuda bernama Dawud, yang dengan izin Allah berhasil mengalahkan Jalut. Kisah ini menjadi asal nama Bastotan, ilmu yang luas dan raga yang kuat bukan sekadar dua target harian, melainkan satu paket bekal yang sama pentingnya, dijaga dengan disiplin diri dan disandarkan pada pertolongan Allah.'
+        'Di barisan itu ada seorang pemuda bernama Dawud, yang dengan izin Allah berhasil mengalahkan Jalut. Kisah ini menjadi asal nama Bastotan: ilmu yang luas dan raga yang kuat adalah satu paket bekal, dijaga dengan disiplin diri dan disandarkan pada pertolongan Allah.'
       ]
     },
     {
@@ -530,7 +701,7 @@
       paragraphs:[
         'Di tengah kaumnya yang menyembah bintang, bulan, dan matahari, Ibrahim muda mengamati langit malam dengan penuh tanya. Ia melihat sebuah bintang bersinar terang dan berkata, "Inikah Tuhanku?" Namun ketika bintang itu tenggelam, ia sadar sesuatu yang lenyap tidak pantas disembah.',
         'Ia lalu melihat bulan terbit dan berkata hal yang sama, namun bulan pun turut tenggelam di ujung malam. Ketika matahari terbit dengan cahaya yang jauh lebih besar, ia sempat berharap itulah jawabannya, hingga matahari itu pun terbenam di penghujung hari.',
-        'Dari situ Ibrahim menyimpulkan bahwa segala sesuatu yang terbit dan tenggelam, yang berubah dan hilang, tidak layak menjadi sandaran hati. Ia lalu menghadapkan wajahnya kepada Allah, Pencipta langit dan bumi, dengan hati yang lurus dan penuh penyerahan diri.'
+        'Dari situ Ibrahim menyimpulkan bahwa segala sesuatu yang terbit dan tenggelam tidak layak menjadi sandaran hati. Ia lalu menghadapkan wajahnya kepada Allah, Pencipta langit dan bumi, dengan hati yang lurus dan penuh penyerahan diri.'
       ]
     },
     {
@@ -539,376 +710,452 @@
       teaser:'Bagaimana Islam memberi kemudahan tanpa mengurangi nilai ibadah.',
       paragraphs:[
         'Seorang sahabat hendak menempuh perjalanan jauh untuk suatu keperluan penting. Ia khawatir perjalanannya akan membuatnya kesulitan menunaikan shalat tepat waktu, sebagaimana biasa ia lakukan di rumah.',
-        'Ia pun bertanya kepada Rasulullah, dan dijelaskan bahwa musafir memiliki keringanan (rukhsah): boleh menjamak dua shalat dalam satu waktu, dan boleh mengqashar (meringkas) shalat yang empat rakaat menjadi dua rakaat, selama jarak dan kondisi perjalanan memenuhi syarat.',
-        'Sahabat itu pun melanjutkan perjalanannya dengan tenang, shalat tetap ia tunaikan, hanya bentuknya yang disesuaikan. Ia belajar bahwa Islam tidak pernah bermaksud memberatkan, melainkan memberi jalan agar ibadah tetap dapat dijaga dalam kondisi apa pun.'
+        'Ia pun bertanya kepada Rasulullah, dan dijelaskan bahwa musafir memiliki keringanan (rukhsah): boleh menjamak dua shalat dalam satu waktu, dan boleh mengqashar shalat yang empat rakaat menjadi dua rakaat, selama jarak dan kondisi perjalanan memenuhi syarat.',
+        'Sahabat itu pun melanjutkan perjalanannya dengan tenang. Ia belajar bahwa Islam tidak pernah bermaksud memberatkan, melainkan memberi jalan agar ibadah tetap dapat dijaga dalam kondisi apa pun.'
       ],
       lesson:'Musafir yang menempuh jarak dan durasi tertentu diperbolehkan menjamak dan mengqashar shalat, sebagai bentuk keringanan dari Allah, bukan pengurangan nilai ibadahnya.'
     },
   ];
 
-  // ---------------- events content ----------------
-  const events = [
-    {
-      id:'ramadhan-tadarus', type:'waktu', icon:'🌙',
-      title:'Tantangan Tadarus Ramadhan',
-      tag:'Berbasis Waktu · Ramadhan 1447H',
-      desc:'Khatam bersama Circle-mu selama sebulan penuh. Progresnya otomatis terhitung dari waktu bacaan Qur\'an harianmu di tab Qur\'an.'
-    },
-    {
-      id:'dzulhijjah-amal', type:'waktu', icon:'🐐',
-      title:'Sepekan Amal Dzulhijjah',
-      tag:'Berbasis Waktu · 1&ndash;10 Dzulhijjah',
-      desc:'Perbanyak dzikir dan sedekah di sepuluh hari terbaik dalam setahun. Event ini aktif otomatis saat tanggalnya tiba.'
-    },
-    {
-      id:'sim-adiwidya', type:'lokasi', icon:'🏛️',
-      title:'SIM x Adiwidya 2026',
-      tag:'Berbasis Lokasi · 1.2 km · 8 Nov 2026',
-      desc:'Simposium ilmiah dan expo teknologi kewirausahaan berbasis nilai Islam di Masjid Salman ITB, Bandung.'
-    },
-    {
-      id:'kajian-subuh', type:'lokasi', icon:'📿',
-      title:'Kajian Subuh: Tafsir Al-Baqarah',
-      tag:'Berbasis Lokasi · 0.8 km · Tiap Ahad',
-      desc:'Kajian rutin ba\'da Subuh di masjid terdekat, membahas tafsir surat Al-Baqarah, termasuk kisah Thalut.'
-    },
-    {
-      id:'lari-jamaah', type:'lokasi', icon:'🏃',
-      title:'Lari Pagi Jamaah Muda',
-      tag:'Berbasis Lokasi · 2.1 km · Sabtu Pagi',
-      desc:'Olahraga bareng Circle masjid sekitar, jangan lupa catat waktumu lewat tab Gerak setelah selesai.'
-    },
-  ];
+  const days = ['Sen','Sel','Rab','Kam','Jum','Sab','Min'];
+  const CIRC_ILMI = 2*Math.PI*80, CIRC_JISM = 2*Math.PI*58;
+  const activityIcons = {'Jalan kaki':'🚶','Lari':'🏃','Olahraga rumah':'🏋️','Bersepeda':'🚴'};
+  const memberColors = ['#2E5257','#B4592F','#8C6A2E','#5B7B6E','#9C5B45'];
+  const subOf = {quran:'tracker', gerak:'tracker', belajar:'tracker'};
 
-  // ---------------- badges ----------------
-  function getBadgeDefs(){
-    const themesCovered = new Set(stories.filter(s => state.storiesRead.has(s.id)).map(s => s.theme));
-    return [
-      {icon:'⚡', label:'7 Hari Beruntun', unlocked: state.streakDays>=7},
-      {icon:'⚡', label:'30 Hari Beruntun', unlocked: state.streakDays>=30},
-      {icon:'⚡', label:'100 Hari Istiqomah', unlocked: state.streakDays>=100},
-      {icon:'📖', label:'Sepekan Istiqomah Qur\'an', unlocked: state.quranWeek.slice(0,6).every(v=>v>0)},
-      {icon:'💡', label:'Kisah Pertama', unlocked: state.storiesRead.size>=1},
-      {icon:'🌙', label:'Penuntut Ilmu', unlocked: themesCovered.size>=3},
-      {icon:'🏃', label:'Gerak Pertama', unlocked: state.gerakSecondsToday>0},
-      {icon:'🔥', label:'Sepekan Aktif Gerak', unlocked: state.gerakWeek.slice(0,6).every(v=>v>0)},
-      {icon:'➕', label:'Circle Starter', unlocked: state.invited},
-      {icon:'💬', label:'Penyemangat', unlocked: state.friends.some(f=>f.nudged)},
-      {icon:'🕌', label:'Bastotan Harian', unlocked: quranMinutesToday()>=state.quranTargetMin && ilmiMinutesToday()>=state.ilmiTargetMin && state.gerakSecondsToday>0},
-      {icon:'❤️', label:'Hati yang Istiqomah', unlocked: state.quranWeek.slice(0,6).every(v=>v>0) && state.gerakWeek.slice(0,6).every(v=>v>0)},
-    ];
-  }
-  function renderAchievements(){
-    const grid = document.getElementById('badge-grid');
-    grid.innerHTML = getBadgeDefs().map(b => `
-      <div class="badge-tile">
-        <div class="badge-icon" style="${b.unlocked ? '' : 'opacity:0.55;'}">${b.unlocked ? b.icon : '🔒'}</div>
-        <div class="badge-label ${b.unlocked ? 'unlocked-label' : ''}">${b.label}</div>
-      </div>
-    `).join('');
-  }
-  function openAchievements(){ renderAchievements(); document.getElementById('overlay-achieve').classList.add('active'); }
-  function closeAchievements(){ document.getElementById('overlay-achieve').classList.remove('active'); }
+  const initials = n => n.trim().charAt(0).toUpperCase();
+  const fmt = n => Math.floor(n).toLocaleString('id-ID');
+  const formatTime = sec => `${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`;
+  const quranMin = () => Math.floor(state.quranSecondsToday/60);
+  const ilmiMin = () => Math.floor(state.ilmiSecondsToday/60);
+  const gerakMin = () => Math.floor(state.gerakSecondsToday/60);
+  const targetsHit = () => (quranMin()>=state.quranTargetMin) + (ilmiMin()>=state.ilmiTargetMin) + (gerakMin()>=state.gerakTargetMin);
+  const progressBar = (pct, color) => `<div class="progress"><span style="width:${Math.min(pct,1)*100}%; background:${color}"></span></div>`;
 
-  // ---------------- nav ----------------
+  // ================= nav + toast =================
   function goTo(tab){
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById('screen-'+tab).classList.add('active');
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+    const navTab = subOf[tab] || tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === navTab));
+    if(tab === 'saya') renderSaya();
     window.scrollTo({top:0, behavior:'instant'});
   }
-
-  // ---------------- toast ----------------
   let toastTimer;
   function showToast(msg){
     const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
+    t.textContent = msg; t.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(()=> t.classList.remove('show'), 2400);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
   }
 
-  // ---------------- dashboard ----------------
-  function renderDashboard(){
-    const ilmiPct = Math.min(ilmiMinutesToday()/state.ilmiTargetMin, 1);
-    const jismPct = Math.min(gerakMinutesToday()/state.gerakTargetMin, 1);
-    const quranPct = Math.min(quranMinutesToday()/state.quranTargetMin, 1);
-    const ringIlmi = document.getElementById('ring-ilmi');
-    const ringJism = document.getElementById('ring-jism');
-    const quranBg = document.getElementById('ring-quran-bg');
-    ringIlmi.style.strokeDasharray = CIRC_ILMI;
-    ringIlmi.style.strokeDashoffset = CIRC_ILMI * (1 - ilmiPct);
-    ringJism.style.strokeDasharray = CIRC_JISM;
-    ringJism.style.strokeDashoffset = CIRC_JISM * (1 - jismPct);
-    quranBg.style.fillOpacity = 0.15 + quranPct * 0.85;
+  // ================= komunitas =================
+  function currentCommunity(){ return communities.find(c => c.id === state.activeCommunity) || communities[0]; }
 
-    document.getElementById('legend-quran').textContent = `${quranMinutesToday()}/${state.quranTargetMin} mnt${quranMinutesToday()>=state.quranTargetMin ? ' ✓' : ''}`;
-    document.getElementById('legend-ilmi').textContent = `${ilmiMinutesToday()}/${state.ilmiTargetMin} mnt${ilmiMinutesToday()>=state.ilmiTargetMin ? ' ✓' : ''}`;
-    document.getElementById('legend-jism').textContent = `${gerakMinutesToday()}/${state.gerakTargetMin} mnt`;
+  function renderKomunitas(){
+    document.getElementById('comm-scroll').innerHTML =
+      communities.map(c => `<button class="comm-chip ${c.id===state.activeCommunity ? 'active' : ''}" onclick="selectCommunity('${c.id}')">${c.icon} ${c.name}</button>`).join('') +
+      `<button class="comm-chip add" onclick="goTo('peta')">🔍 Cari komunitas</button>`;
 
-    const wrap = document.getElementById('home-circle-scroll');
-    wrap.innerHTML = '';
-    state.friends.forEach(f => {
-      const done = f.quran && f.ilmi && f.gerak;
-      const div = document.createElement('div');
-      div.className = 'circle-mini';
-      div.innerHTML = `
-        <div class="mini-avatar ${done ? 'done' : 'pending'}" style="background:${f.color}">${initials(f.name)}</div>
-        <div class="mini-name">${f.name}</div>
-      `;
-      wrap.appendChild(div);
+    const c = currentCommunity();
+    const goals = c.goals.map(g => {
+      const color = g.kind === 'quran' ? 'var(--gold)' : 'var(--jism)';
+      return `<div class="goal">
+        <div class="goal-head"><b>${g.kind==='quran' ? '📖' : '🏃'} ${g.label}</b><span class="goal-val">${fmt(g.cur)} / ${fmt(g.target)} mnt</span></div>
+        ${progressBar(g.cur/g.target, color)}
+      </div>`;
+    }).join('');
+    document.getElementById('comm-detail').innerHTML = `
+      <div class="comm-hero">
+        <div class="comm-top">
+          <div class="comm-icon">${c.icon}</div>
+          <div><div class="comm-name">${c.name}</div><div class="comm-meta">${c.type} · ${c.members.length + 1} anggota</div></div>
+        </div>
+        ${goals}
+        <div class="agenda">
+          <div class="agenda-icon">${c.next.icon}</div>
+          <div><div class="agenda-title">${c.next.title}</div><div class="agenda-when">${c.next.when}</div></div>
+        </div>
+      </div>`;
+
+    const doneCount = c.members.filter(m => m.done).length + (targetsHit()===3 ? 1 : 0);
+    document.getElementById('member-count').textContent = `${doneCount}/${c.members.length + 1} sudah`;
+    const me = `<div class="member-row">
+        <div class="m-avatar" style="background:var(--ilmi)">S</div>
+        <div class="m-info"><div class="m-name">Kamu</div><div class="m-sub">${targetsHit()}/3 target hari ini · hanya kamu yang melihat ini</div></div>
+        ${targetsHit()===3 ? '<span class="status-pill done">Sudah ✓</span>' : `<button class="pill-btn jism" onclick="goTo('tracker')">Catat</button>`}
+      </div>`;
+    const rows = c.members.map((m,i) => `<div class="member-row">
+        <div class="m-avatar" style="background:${m.color}">${initials(m.name)}</div>
+        <div class="m-info"><div class="m-name">${m.name}</div><div class="m-sub">${m.done ? 'Target hari ini tercapai' : 'Belum mencapai target hari ini'}</div></div>
+        ${m.done ? '<span class="status-pill done">Sudah ✓</span>'
+                 : `<button class="pill-btn jism ${m.nudged ? 'done' : ''}" onclick="nudge(${i})" ${m.nudged ? 'disabled' : ''}>${m.nudged ? 'Terkirim' : 'Ingatkan'}</button>`}
+      </div>`).join('');
+    document.getElementById('member-list').innerHTML = me + rows;
+  }
+  function selectCommunity(id){ state.activeCommunity = id; renderKomunitas(); }
+  function nudge(i){
+    const m = currentCommunity().members[i];
+    m.nudged = true; state.nudgedAny = true;
+    renderKomunitas();
+    showToast(`Pengingat terkirim ke ${m.name} 💬`);
+  }
+  function inviteFriend(){
+    state.invited = true;
+    showToast(`Tautan undangan ${currentCommunity().name} disalin ✉️`);
+  }
+
+  // feed tracker minutes into every community goal of the same kind
+  function feedCommunities(kind, seconds){
+    const minutes = seconds/60;
+    communities.forEach(c => c.goals.forEach(g => { if(g.kind === kind) g.cur += minutes; }));
+  }
+
+  // ================= peta =================
+  function isJoined(p){ return communities.some(c => c.id === p.id); }
+  function visiblePlaces(){ return state.placeFilter === 'semua' ? places : places.filter(p => p.kind === state.placeFilter); }
+
+  function renderPeta(){
+    const vis = new Set(visiblePlaces().map(p => p.id));
+    document.getElementById('pins').innerHTML = places.map(p => `
+      <button class="pin ${p.kind} ${state.selectedPlace===p.id ? 'selected' : ''} ${vis.has(p.id) ? '' : 'dim'}"
+        style="left:${p.x}%; top:${p.y}%;" onclick="selectPlace('${p.id}')" aria-label="${p.name}">
+        <div class="pin-dot"><span>${p.kind==='masjid' ? '🕌' : '🤝'}</span></div>
+      </button>`).join('');
+
+    const list = visiblePlaces().slice().sort((a,b) => (b.id===state.selectedPlace) - (a.id===state.selectedPlace));
+    document.getElementById('place-list').innerHTML = list.map(p => {
+      const joined = isJoined(p);
+      return `<div class="place-row ${state.selectedPlace===p.id ? 'selected' : ''}" onclick="selectPlace('${p.id}')">
+        <div class="place-icon" style="background:${p.kind==='masjid' ? 'var(--ilmi-soft)' : 'var(--jism-soft)'}">${p.kind==='masjid' ? '🕌' : '🤝'}</div>
+        <div class="place-body">
+          <div class="place-name">${p.name}</div>
+          <div class="place-meta">${p.dist} · ${p.members} anggota</div>
+          <div class="place-acts">${p.acts.map(a => `<span class="act-tag">${a}</span>`).join('')}</div>
+        </div>
+        ${joined ? `<button class="pill-btn done" onclick="event.stopPropagation(); openCommunity('${p.id}')">Buka</button>`
+                 : `<button class="pill-btn" onclick="event.stopPropagation(); joinPlace('${p.id}')">Gabung</button>`}
+      </div>`;
+    }).join('');
+  }
+  function selectPlace(id){ state.selectedPlace = id; renderPeta(); }
+  function openCommunity(id){ state.activeCommunity = id; renderKomunitas(); goTo('komunitas'); }
+  function joinPlace(id){
+    const p = places.find(x => x.id === id);
+    if(!p || isJoined(p)) return;
+    const names = p.kind==='masjid' ? ['Pak Yusuf','Hamzah','Fatimah'] : ['Rafi','Khadijah','Ilham'];
+    communities.push({
+      id:p.id, name:p.name, type: p.kind==='masjid' ? 'Komunitas masjid' : 'Komunitas', icon: p.kind==='masjid' ? '🕌' : '🤝',
+      members: names.map((n,i) => ({name:n, color:memberColors[(i+2)%memberColors.length], done:i!==1})),
+      goals:[
+        {kind:'quran', label:'Tadarus bersama pekan ini', cur:0, target:300},
+        {kind:'gerak', label:'Gerak bersama pekan ini', cur:0, target:600},
+      ],
+      next:{icon:'📅', title:p.acts[0], when:p.name},
     });
+    state.history.unshift({day:'Hari ini', val:`Bergabung dengan ${p.name}`});
+    renderPeta(); renderKomunitas(); renderTracker();
+    showToast(`Alhamdulillah, kamu bergabung dengan ${p.name} 🤝`);
+  }
+  document.getElementById('place-chips').addEventListener('click', e => {
+    const chip = e.target.closest('.chip'); if(!chip) return;
+    state.placeFilter = chip.dataset.filter;
+    document.querySelectorAll('#place-chips .chip').forEach(c => c.classList.toggle('active-ilmi', c === chip));
+    renderPeta();
+  });
+
+  // ================= tracker =================
+  function renderTracker(){
+    const ilmiPct = Math.min(ilmiMin()/state.ilmiTargetMin, 1);
+    const jismPct = Math.min(gerakMin()/state.gerakTargetMin, 1);
+    const quranPct = Math.min(quranMin()/state.quranTargetMin, 1);
+    const ri = document.getElementById('ring-ilmi'), rj = document.getElementById('ring-jism');
+    ri.style.strokeDasharray = CIRC_ILMI; ri.style.strokeDashoffset = CIRC_ILMI*(1-ilmiPct);
+    rj.style.strokeDasharray = CIRC_JISM; rj.style.strokeDashoffset = CIRC_JISM*(1-jismPct);
+    document.getElementById('ring-quran-bg').style.fillOpacity = 0.15 + quranPct*0.85;
+    document.getElementById('streak-num').textContent = state.streakDays;
+    document.getElementById('act-quran').textContent = `${quranMin()}/${state.quranTargetMin} mnt${quranPct>=1 ? ' ✓' : ''}`;
+    document.getElementById('act-gerak').textContent = `${gerakMin()}/${state.gerakTargetMin} mnt${jismPct>=1 ? ' ✓' : ''}`;
+    document.getElementById('act-ilmi').textContent = `${ilmiMin()}/${state.ilmiTargetMin} mnt${ilmiPct>=1 ? ' ✓' : ''}`;
+    document.getElementById('feed-count').textContent = `${communities.length} komunitas`;
   }
 
-  // ---------------- quran screen + reader ----------------
+  function renderChart(id, week, target, color, soft){
+    const chart = document.getElementById(id);
+    const max = Math.max(...week, target, 5);
+    chart.innerHTML = week.map((v,i) => {
+      const today = i === 6;
+      return `<div class="chart-col"><div class="chart-bar" style="height:${Math.max(v/max*100,3)}%; background:${today ? color : soft}"></div><div class="chart-day" style="${today ? `color:${color}; font-weight:700;` : ''}">${days[i]}</div></div>`;
+    }).join('');
+  }
+
   function renderQuran(){
-    const minToday = quranMinutesToday();
-    const reached = minToday >= state.quranTargetMin;
-    document.getElementById('quran-big').innerHTML = `${minToday} <span style="font-size:16px; font-weight:500; color:var(--ink-soft);">menit</span>`;
-    document.getElementById('quran-target-label').textContent = `Target harian: ${state.quranTargetMin} menit`;
-    document.getElementById('quran-streak').textContent = `${state.streakDays} hari`;
+    const m = quranMin(), reached = m >= state.quranTargetMin;
+    document.getElementById('quran-big').innerHTML = `${m} <span class="stat-unit">menit</span>`;
+    document.getElementById('quran-target').textContent = state.quranTargetMin;
     const check = document.getElementById('quran-check');
-    check.textContent = reached ? '✓' : '📖';
-    check.classList.toggle('empty', !reached);
+    check.textContent = reached ? '✓' : '📖'; check.classList.toggle('empty', !reached);
+    renderChart('quran-chart', state.quranWeek.slice(0,6).concat([m]), state.quranTargetMin, 'var(--gold)', 'var(--gold-soft)');
+    const pg = mushafPages[state.mushafPage-1];
+    document.getElementById('quran-last').textContent = `${pg.surah} · Halaman ${pg.page}`;
+    document.getElementById('quran-last-ar').textContent = toAr(pg.page);
+    document.getElementById('quran-pages-today').textContent = `${state.pagesReadToday.size} halaman hari ini`;
+    document.getElementById('quran-open-btn').textContent = state.mushafPage > 1 || state.pagesReadToday.size ? `📖 Lanjutkan · Halaman ${state.mushafPage}` : '📖 Mulai Membaca';
+  }
 
-    const chart = document.getElementById('quran-chart');
-    chart.innerHTML = '';
-    const week = state.quranWeek.slice(0,6).concat([minToday]);
-    const max = Math.max(...week, state.quranTargetMin, 5);
-    week.forEach((v,i) => {
-      const h = Math.max((v/max)*100, 3);
-      const isToday = i === 6;
-      chart.innerHTML += `<div class="chart-col"><div class="chart-bar" style="height:${h}%; background:${isToday ? 'var(--ilmi)' : 'var(--ilmi-soft)'}"></div><div class="chart-day" style="${isToday ? 'color:var(--ilmi); font-weight:700;' : ''}">${days[i]}</div></div>`;
+  // ---------- mushaf reader ----------
+  const toAr = n => String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+  const PAGE_READ_SEC = 5;        // lama minimal di satu halaman agar dihitung terbaca
+  let quranStart = null, pageStart = null;
+
+  function renderMushafPage(){
+    const p = mushafPages[state.mushafPage-1];
+    const cls = p.center ? 'm-line center' : 'm-line';
+    let html = `<div class="m-head"><span class="ar">${p.surahAr}</span><span>Juz ${p.juz}</span></div>`;
+    if(p.banner) html += `<div class="surah-banner">${p.banner}</div>`;
+    html += '<div class="m-lines" id="m-lines">';
+    if(p.basmalah) html += `<div class="m-line center"><span>${p.basmalah}</span></div>`;
+    html += p.lines.map(l => `<div class="${cls}"><span>${l}</span></div>`).join('');
+    html += `</div><div class="m-foot">${toAr(p.page)}</div>`;
+    document.getElementById('mushaf-page').innerHTML = html;
+    document.getElementById('mushaf-ind').textContent = `Hal. ${p.page} / ${mushafPages.length}`;
+    document.getElementById('mushaf-prev').disabled = p.page === 1;
+    document.getElementById('mushaf-next').disabled = p.page === mushafPages.length;
+    document.getElementById('mushaf-prev').style.opacity = p.page === 1 ? 0.4 : 1;
+    document.getElementById('mushaf-next').style.opacity = p.page === mushafPages.length ? 0.4 : 1;
+    fitMushafLines();
+  }
+  // perkecil ukuran huruf sampai baris terpanjang muat di lebar layar
+  function fitMushafLines(){
+    const box = document.getElementById('m-lines');
+    if(!box) return;
+    box.style.fontSize = '20px';
+    const spans = box.querySelectorAll('span');
+    const widest = Math.max(...[...spans].map(s => s.getBoundingClientRect().width));
+    const avail = box.clientWidth;
+    if(widest > 0 && avail > 0) box.style.fontSize = Math.min(24, 20 * (avail - 2) / widest).toFixed(2) + 'px';
+  }
+  function bankPageRead(){
+    if(pageStart !== null && (Date.now() - pageStart)/1000 >= PAGE_READ_SEC) state.pagesReadToday.add(state.mushafPage);
+    pageStart = Date.now();
+  }
+  function mushafStep(dir){
+    const next = state.mushafPage + dir;
+    if(next < 1 || next > mushafPages.length) return;
+    bankPageRead();
+    state.mushafPage = next;
+    renderMushafPage();
+    document.querySelector('#overlay-quran .overlay-body').scrollTop = 0;
+  }
+  // geser kanan = halaman berikutnya, seperti membalik mushaf
+  (function enableSwipe(){
+    const el = document.getElementById('mushaf-page');
+    let x0 = null;
+    el.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, {passive:true});
+    el.addEventListener('touchend', e => {
+      if(x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0; x0 = null;
+      if(Math.abs(dx) > 50) mushafStep(dx > 0 ? 1 : -1);
     });
+  })();
+  window.addEventListener('resize', () => { if(document.getElementById('overlay-quran').classList.contains('active')) fitMushafLines(); });
 
-    document.getElementById('quran-history').innerHTML = state.quranHistory.map(h => `<div class="hist-row"><span class="hist-day">${h.day}</span><span class="hist-val">${h.val}</span></div>`).join('');
-  }
-
-  function renderAyat(){
-    document.getElementById('ayat-list').innerHTML = fatihah.map((a,i) => `
-      <div class="ayat-card">
-        <div class="ayat-num">${i+1}</div>
-        <div class="ayat-arabic">${a.ar}</div>
-        <div class="ayat-translate">${a.tr}</div>
-      </div>
-    `).join('');
-  }
-
-  let quranSessionStart = null;
   function openQuranReader(){
-    renderAyat();
-    quranSessionStart = Date.now();
     document.getElementById('overlay-quran').classList.add('active');
+    renderMushafPage();
+    if(document.fonts && document.fonts.load) document.fonts.load('20px "Amiri Quran"').then(fitMushafLines).catch(() => {});
+    quranStart = Date.now(); pageStart = Date.now();
   }
   function closeQuranReader(){
     document.getElementById('overlay-quran').classList.remove('active');
-    if(quranSessionStart === null) return;
-    const elapsed = Math.floor((Date.now() - quranSessionStart) / 1000);
-    quranSessionStart = null;
-    const wasReached = quranMinutesToday() >= state.quranTargetMin;
-    state.quranSecondsToday += elapsed;
-    state.quranWeek[6] = quranMinutesToday();
-    const nowReached = quranMinutesToday() >= state.quranTargetMin;
-    renderQuran(); renderDashboard();
+    if(quranStart === null) return;
+    const before = state.pagesReadToday.size;
+    bankPageRead(); pageStart = null;
+    const newPages = state.pagesReadToday.size - before;
+    const elapsed = Math.floor((Date.now()-quranStart)/1000); quranStart = null;
+    const was = quranMin() >= state.quranTargetMin;
+    state.quranSecondsToday += elapsed; state.quranWeek[6] = quranMin();
+    feedCommunities('quran', elapsed);
+    afterTracking();
     if(elapsed >= 1){
-      showToast(!wasReached && nowReached ? 'Alhamdulillah, target Qur\'an harian tercapai ✅' : `${formatTime(elapsed)} tercatat, teruskan membaca 📖`);
+      const pagesTxt = state.pagesReadToday.size ? ` · ${state.pagesReadToday.size} halaman hari ini` : '';
+      showToast(!was && quranMin()>=state.quranTargetMin ? `Alhamdulillah, target Qur'an tercapai ✅${pagesTxt}` : `${formatTime(elapsed)} tercatat${newPages ? `, +${newPages} halaman` : ''}, ikut mengisi tadarus komunitas 📖`);
     }
   }
 
-  // ---------------- gerak screen + session ----------------
   function renderGerak(){
-    const minToday = gerakMinutesToday();
-    const reached = minToday >= state.gerakTargetMin;
-    document.getElementById('gerak-big').innerHTML = `${minToday} <span style="font-size:16px; font-weight:500; color:var(--ink-soft);">menit</span>`;
-    document.getElementById('gerak-target-label').textContent = `Target harian: ${state.gerakTargetMin} menit`;
-    document.getElementById('gerak-streak').textContent = `${state.streakDays} hari`;
+    const m = gerakMin(), reached = m >= state.gerakTargetMin;
+    document.getElementById('gerak-big').innerHTML = `${m} <span class="stat-unit">menit</span>`;
+    document.getElementById('gerak-target').textContent = state.gerakTargetMin;
     const check = document.getElementById('gerak-check');
-    check.textContent = reached ? '✓' : '🏃';
-    check.classList.toggle('empty', !reached);
-
-    const chart = document.getElementById('gerak-chart');
-    chart.innerHTML = '';
-    const week = state.gerakWeek.slice(0,6).concat([minToday]);
-    const max = Math.max(...week, state.gerakTargetMin);
-    week.forEach((v,i) => {
-      const h = Math.max((v/max)*100, 3);
-      const isToday = i === 6;
-      chart.innerHTML += `<div class="chart-col"><div class="chart-bar" style="height:${h}%; background:${isToday ? 'var(--jism)' : 'var(--jism-soft)'}"></div><div class="chart-day" style="${isToday ? 'color:var(--jism); font-weight:700;' : ''}">${days[i]}</div></div>`;
-    });
-
-    document.getElementById('gerak-history').innerHTML = state.gerakHistory.map(h => `<div class="hist-row"><span class="hist-day">${h.day}</span><span class="hist-val">${h.val}</span></div>`).join('');
+    check.textContent = reached ? '✓' : '🏃'; check.classList.toggle('empty', !reached);
+    renderChart('gerak-chart', state.gerakWeek.slice(0,6).concat([m]), state.gerakTargetMin, 'var(--jism)', 'var(--jism-soft)');
   }
-  document.getElementById('activity-chips').addEventListener('click', (e) => {
-    const chip = e.target.closest('.chip');
-    if(!chip) return;
+  document.getElementById('activity-chips').addEventListener('click', e => {
+    const chip = e.target.closest('.chip'); if(!chip) return;
     document.querySelectorAll('#activity-chips .chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    state.activeChip = chip.dataset.act;
+    chip.classList.add('active'); state.activeChip = chip.dataset.act;
   });
-
-  let gerakSessionStart = null;
+  let gerakStart = null;
   function openGerakSession(){
-    gerakSessionStart = Date.now();
+    gerakStart = Date.now();
     document.getElementById('gerak-session-icon').textContent = activityIcons[state.activeChip] || '🏃';
     document.getElementById('gerak-session-type').textContent = state.activeChip;
     document.getElementById('overlay-gerak').classList.add('active');
   }
   function closeGerakSession(){
     document.getElementById('overlay-gerak').classList.remove('active');
-    if(gerakSessionStart === null) return;
-    const elapsed = Math.floor((Date.now() - gerakSessionStart) / 1000);
-    gerakSessionStart = null;
-    const wasReached = gerakMinutesToday() >= state.gerakTargetMin;
-    state.gerakSecondsToday += elapsed;
-    state.gerakWeek[6] = gerakMinutesToday();
-    const nowReached = gerakMinutesToday() >= state.gerakTargetMin;
-    renderGerak(); renderDashboard();
-    if(elapsed >= 1){
-      showToast(!wasReached && nowReached ? 'Mantap, target gerak harian tercapai ✅' : `${formatTime(elapsed)} ${state.activeChip.toLowerCase()} tercatat 🏃`);
-    }
+    if(gerakStart === null) return;
+    const elapsed = Math.floor((Date.now()-gerakStart)/1000); gerakStart = null;
+    const was = gerakMin() >= state.gerakTargetMin;
+    state.gerakSecondsToday += elapsed; state.gerakWeek[6] = gerakMin();
+    feedCommunities('gerak', elapsed);
+    afterTracking();
+    if(elapsed >= 1) showToast(!was && gerakMin()>=state.gerakTargetMin ? 'Mantap, target gerak tercapai ✅' : `${formatTime(elapsed)} ${state.activeChip.toLowerCase()} tercatat, ikut mengisi target komunitas 🏃`);
   }
 
-  // ---------------- belajar screen ----------------
-  function renderThemeChips(){
-    document.querySelectorAll('#theme-chips .chip').forEach(c => c.classList.toggle('active-ilmi', c.dataset.theme === state.learnTheme));
-  }
-  document.getElementById('theme-chips').addEventListener('click', (e) => {
-    const chip = e.target.closest('.chip');
-    if(!chip) return;
-    state.learnTheme = chip.dataset.theme;
-    renderThemeChips(); renderStoryList();
+  function renderThemeChips(){ document.querySelectorAll('#theme-chips .chip').forEach(c => c.classList.toggle('active-ilmi', c.dataset.theme === state.learnTheme)); }
+  document.getElementById('theme-chips').addEventListener('click', e => {
+    const chip = e.target.closest('.chip'); if(!chip) return;
+    state.learnTheme = chip.dataset.theme; renderThemeChips(); renderStoryList();
   });
   function renderStoryList(){
-    const filtered = stories.filter(s => s.theme === state.learnTheme);
-    document.getElementById('story-list').innerHTML = filtered.map(s => {
+    document.getElementById('story-list').innerHTML = stories.filter(s => s.theme === state.learnTheme).map(s => {
       const done = state.storiesRead.has(s.id);
-      return `
-        <div class="story-card" onclick="openStoryReader('${s.id}')">
-          <div class="story-icon">${s.icon}</div>
-          <div class="story-body">
-            <div class="story-title">${s.title}</div>
-            <div class="story-tag">${s.tag}</div>
-            <div class="story-teaser">${s.teaser}</div>
-          </div>
-          <div class="story-side ${done ? 'done' : 'todo'}">${done ? 'Selesai ✓' : 'Baca'}</div>
-        </div>
-      `;
+      return `<div class="story-card" onclick="openStoryReader('${s.id}')">
+        <div class="story-icon">${s.icon}</div>
+        <div class="story-body"><div class="story-title">${s.title}</div><div class="story-tag">${s.tag}</div><div class="story-teaser">${s.teaser}</div></div>
+        <div class="story-side ${done ? 'done' : 'todo'}">${done ? 'Selesai ✓' : 'Baca'}</div>
+      </div>`;
     }).join('');
   }
+  let storyStart = null;
+  function openStoryReader(id){
+    const s = stories.find(x => x.id === id); if(!s) return;
+    state.openStoryId = id;
+    let html = `<div class="overlay-title">${s.title}</div><div class="overlay-tag">${s.tag}</div>`;
+    s.paragraphs.forEach(p => html += `<p class="story-p">${p}</p>`);
+    if(s.quote) html += `<div class="story-quote"><div class="ar">${s.quote.ar}</div><div class="tr">${s.quote.tr}</div></div>`;
+    if(s.paragraphs2) s.paragraphs2.forEach(p => html += `<p class="story-p">${p}</p>`);
+    if(s.lesson) html += `<div class="lesson-box"><span class="lesson-label">PELAJARAN</span>${s.lesson}</div>`;
+    document.getElementById('story-body').innerHTML = html;
+    storyStart = Date.now();
+    document.getElementById('overlay-story').classList.add('active');
+  }
+  function bankStoryTime(){
+    if(storyStart === null) return 0;
+    const elapsed = Math.floor((Date.now()-storyStart)/1000); storyStart = null;
+    state.ilmiSecondsToday += elapsed; return elapsed;
+  }
+  function closeStoryReader(){
+    const elapsed = bankStoryTime();
+    document.getElementById('overlay-story').classList.remove('active');
+    state.openStoryId = null; afterTracking();
+    if(elapsed >= 1) showToast(`${formatTime(elapsed)} tercatat ke Ilmi 💡`);
+  }
+  function finishStory(){
+    const id = state.openStoryId; bankStoryTime();
+    document.getElementById('overlay-story').classList.remove('active');
+    if(id && !state.storiesRead.has(id)){ state.storiesRead.add(id); showToast('MasyaAllah, kisah selesai dibaca ✨'); }
+    state.openStoryId = null; afterTracking();
+  }
 
-  // ---------------- event screen ----------------
-  document.getElementById('event-chips').addEventListener('click', (e) => {
-    const chip = e.target.closest('.chip');
-    if(!chip) return;
+  function afterTracking(){ renderTracker(); renderQuran(); renderGerak(); renderStoryList(); renderKomunitas(); }
+
+  // ================= event =================
+  document.getElementById('event-tabs').addEventListener('click', e => {
+    const chip = e.target.closest('.chip'); if(!chip) return;
+    state.eventTab = chip.dataset.etab;
+    document.querySelectorAll('#event-tabs .chip').forEach(c => c.classList.toggle('active-ilmi', c === chip));
+    document.getElementById('etab-tantangan').style.display = state.eventTab === 'tantangan' ? '' : 'none';
+    document.getElementById('etab-masjid').style.display = state.eventTab === 'masjid' ? '' : 'none';
+  });
+
+  function renderChallenges(){
+    const row = ch => {
+      const scopeTag = ch.scope === 'komunitas' ? '<span class="tag-komunitas">Tantangan komunitas</span>' : '<span class="tag-waktu">Tantangan pribadi</span>';
+      const side = ch.joined ? '' : `<button class="pill-btn" onclick="joinChallenge('${ch.id}')">Ikuti</button>`;
+      const prog = ch.joined ? `<div class="mini-progress">${progressBar(ch.progress/ch.total, ch.scope==='komunitas' ? 'var(--ilmi)' : 'var(--gold)')}<span class="goal-val">${ch.progress} / ${ch.total} ${ch.unit}</span></div>` : '';
+      return `<div class="row-item">
+        <div class="row-icon">${ch.icon}</div>
+        <div class="story-body"><div class="story-title">${ch.title}</div><div class="story-tag">${scopeTag}</div><div class="story-teaser">${ch.desc}</div>${prog}</div>
+        ${side}
+      </div>`;
+    };
+    const active = challenges.filter(c => c.joined), open = challenges.filter(c => !c.joined);
+    document.getElementById('active-challenges').innerHTML = active.length ? active.map(row).join('') : '<div class="empty-text">Belum ada tantangan yang diikuti.</div>';
+    document.getElementById('open-challenges').innerHTML = open.length ? open.map(row).join('') : '<div class="empty-text">Semua tantangan sudah kamu ikuti. MasyaAllah!</div>';
+  }
+  function joinChallenge(id){
+    const ch = challenges.find(c => c.id === id); if(!ch) return;
+    ch.joined = true;
+    state.history.unshift({day:'Hari ini', val:`Mengikuti ${ch.title}`});
+    renderChallenges();
+    showToast(`Bismillah, kamu mengikuti ${ch.title} 💪`);
+  }
+
+
+  document.getElementById('event-chips').addEventListener('click', e => {
+    const chip = e.target.closest('.chip'); if(!chip) return;
     state.eventFilter = chip.dataset.filter;
     document.querySelectorAll('#event-chips .chip').forEach(c => c.classList.toggle('active-ilmi', c === chip));
     renderEvents();
   });
   function renderEvents(){
-    const filtered = state.eventFilter === 'semua' ? events : events.filter(ev => ev.type === state.eventFilter);
-    document.getElementById('event-list').innerHTML = filtered.map(ev => {
+    const list = state.eventFilter === 'semua' ? events : events.filter(ev => ev.type === state.eventFilter);
+    document.getElementById('event-list').innerHTML = list.map(ev => {
       const joined = state.joinedEvents.has(ev.id);
-      const tagClass = ev.type === 'waktu' ? 'event-tag-waktu' : 'event-tag-lokasi';
-      return `
-        <div class="event-card">
-          <div class="event-icon">${ev.icon}</div>
-          <div class="story-body">
-            <div class="story-title">${ev.title}</div>
-            <div class="story-tag ${tagClass}">${ev.tag}</div>
-            <div class="story-teaser">${ev.desc}</div>
-          </div>
-          <button class="btn-join ${joined ? 'joined' : ''}" onclick="joinEvent('${ev.id}')" ${joined ? 'disabled' : ''}>${joined ? 'Terdaftar ✓' : 'Ikuti'}</button>
-        </div>
-      `;
+      return `<div class="row-item">
+        <div class="row-icon">${ev.icon}</div>
+        <div class="story-body"><div class="story-title">${ev.title}</div><div class="story-tag ${ev.type==='waktu' ? 'tag-waktu' : 'tag-lokasi'}">${ev.tag}</div><div class="story-teaser">${ev.desc}</div></div>
+        <button class="pill-btn ${joined ? 'done' : ''}" onclick="joinEvent('${ev.id}')" ${joined ? 'disabled' : ''}>${joined ? 'Terdaftar ✓' : 'Ikuti'}</button>
+      </div>`;
     }).join('');
   }
   function joinEvent(id){
-    const ev = events.find(x => x.id === id);
-    if(!ev) return;
+    const ev = events.find(x => x.id === id); if(!ev) return;
     state.joinedEvents.add(id);
+    state.history.unshift({day:'Hari ini', val:`Terdaftar di ${ev.title}`});
     renderEvents();
     showToast(`Kamu terdaftar di ${ev.title} ✅`);
   }
 
-
-  let storySessionStart = null;
-  function openStoryReader(id){
-    const s = stories.find(x => x.id === id);
-    if(!s) return;
-    state.openStoryId = id;
-    let html = `<div class="overlay-title">${s.title}</div><div class="overlay-tag">${s.tag}</div>`;
-    s.paragraphs.forEach(p => { html += `<p class="story-p">${p}</p>`; });
-    if(s.quote) html += `<div class="story-quote"><div class="ar">${s.quote.ar}</div><div class="tr">${s.quote.tr}</div></div>`;
-    if(s.paragraphs2) s.paragraphs2.forEach(p => { html += `<p class="story-p">${p}</p>`; });
-    if(s.lesson) html += `<div class="lesson-box"><span class="lesson-label">PELAJARAN</span>${s.lesson}</div>`;
-    document.getElementById('story-body').innerHTML = html;
-    storySessionStart = Date.now();
-    document.getElementById('overlay-story').classList.add('active');
+  // ================= saya =================
+  function getBadges(){
+    const themes = new Set(stories.filter(s => state.storiesRead.has(s.id)).map(s => s.theme));
+    return [
+      {icon:'⚡', label:'7 Hari Beruntun', on: state.streakDays>=7},
+      {icon:'⚡', label:'30 Hari Beruntun', on: state.streakDays>=30},
+      {icon:'📖', label:"Sepekan Istiqomah Qur'an", on: state.quranWeek.slice(0,6).every(v=>v>0)},
+      {icon:'💡', label:'Kisah Pertama', on: state.storiesRead.size>=1},
+      {icon:'🌙', label:'Penuntut Ilmu', on: themes.size>=3},
+      {icon:'🏃', label:'Gerak Pertama', on: state.gerakSecondsToday>0},
+      {icon:'🕌', label:'Anggota Jamaah', on: communities.length>3},
+      {icon:'➕', label:'Pengajak Kebaikan', on: state.invited},
+      {icon:'💬', label:'Penyemangat', on: state.nudgedAny},
+      {icon:'🏆', label:'Peserta Tantangan', on: challenges.filter(c=>c.joined).length>=2},
+      {icon:'📅', label:'Hadir di Masjid', on: state.joinedEvents.size>=1},
+      {icon:'❤️', label:'Bastotan Harian', on: targetsHit()===3},
+    ];
   }
-  function bankStoryTime(){
-    if(storySessionStart === null) return 0;
-    const elapsed = Math.floor((Date.now() - storySessionStart) / 1000);
-    storySessionStart = null;
-    state.ilmiSecondsToday += elapsed;
-    return elapsed;
-  }
-  function closeStoryReader(){
-    const elapsed = bankStoryTime();
-    document.getElementById('overlay-story').classList.remove('active');
-    state.openStoryId = null;
-    renderDashboard(); renderStoryList();
-    if(elapsed >= 1) showToast(`${formatTime(elapsed)} tercatat ke Ilmi 💡`);
-  }
-  function finishStory(){
-    const id = state.openStoryId;
-    const elapsed = bankStoryTime();
-    document.getElementById('overlay-story').classList.remove('active');
-    if(id){
-      const wasNew = !state.storiesRead.has(id);
-      state.storiesRead.add(id);
-      if(wasNew) showToast('MasyaAllah, kisah selesai dibaca ✨');
-    }
-    state.openStoryId = null;
-    renderDashboard(); renderStoryList();
+  function renderSaya(){
+    document.getElementById('p-meta').textContent = `Anggota ${communities.length} komunitas · ${challenges.filter(c=>c.joined).length} tantangan aktif`;
+    document.getElementById('st-streak').textContent = state.streakDays;
+    document.getElementById('st-quran').textContent = fmt(state.quranWeek.slice(0,6).reduce((a,b)=>a+b,0) + quranMin());
+    document.getElementById('st-gerak').textContent = fmt(state.gerakWeek.slice(0,6).reduce((a,b)=>a+b,0) + gerakMin());
+    document.getElementById('st-kisah').textContent = state.storiesRead.size;
+    document.getElementById('badge-grid').innerHTML = getBadges().map(b => `
+      <div class="badge-tile">
+        <div class="badge-icon" style="${b.on ? '' : 'opacity:0.55;'}">${b.on ? b.icon : '🔒'}</div>
+        <div class="badge-label ${b.on ? 'unlocked' : ''}">${b.label}</div>
+      </div>`).join('');
+    document.getElementById('history-list').innerHTML = state.history.map(h => `<div class="hist-row"><span class="hist-day">${h.day}</span><span class="hist-val">${h.val}</span></div>`).join('');
   }
 
-  // ---------------- circle screen ----------------
-  function renderCircle(){
-    document.getElementById('friend-list').innerHTML = state.friends.map((f, i) => {
-      const done = f.quran && f.ilmi && f.gerak;
-      const action = done
-        ? `<span class="badge-done">Alhamdulillah ✓</span>`
-        : `<button class="btn-nudge ${f.nudged ? 'sent' : ''}" onclick="nudge(${i})" ${f.nudged ? 'disabled' : ''}>${f.nudged ? 'Terkirim' : 'Ingatkan'}</button>`;
-      return `
-        <div class="friend-row">
-          <div class="f-avatar" style="background:${f.color}">${initials(f.name)}</div>
-          <div class="f-info">
-            <div class="f-name">${f.name}</div>
-            <div class="f-status">
-              <span><span class="status-dot" style="background:${f.quran ? 'var(--gold)' : 'var(--border)'}"></span>Qur'an</span>
-              <span><span class="status-dot" style="background:${f.ilmi ? 'var(--ilmi)' : 'var(--border)'}"></span>Ilmi</span>
-              <span><span class="status-dot" style="background:${f.gerak ? 'var(--jism)' : 'var(--border)'}"></span>Gerak</span>
-            </div>
-          </div>
-          ${action}
-        </div>
-      `;
-    }).join('');
-  }
-  function nudge(i){
-    state.friends[i].nudged = true;
-    renderCircle();
-    showToast(`Pengingat terkirim ke ${state.friends[i].name} 💬`);
-  }
-  function inviteFriend(){
-    state.invited = true;
-    showToast('Tautan undangan Circle disalin ✉️');
-  }
-
-  // ---------------- init ----------------
+  // ================= init =================
   function renderAll(){
-    document.getElementById('streak-num').textContent = state.streakDays;
-    renderDashboard(); renderQuran(); renderGerak(); renderThemeChips(); renderStoryList(); renderEvents(); renderCircle();
+    renderKomunitas(); renderPeta(); renderTracker(); renderQuran(); renderGerak();
+    renderThemeChips(); renderStoryList(); renderChallenges(); renderEvents(); renderSaya();
   }
   renderAll();
 </script>
